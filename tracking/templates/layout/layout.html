@@ -1,0 +1,88 @@
+﻿{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>Tracking | {% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico'%}" />
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    {% block css %}{% endblock %}
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBEuaoh_rW9edjj3Ona1XpY2yOk090mJ5o&amp;sensor=true"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/markerclusterer.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+
+<body>
+    <nav id="navbar" class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-menu">
+                    <span class="sr-only">Toogle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a id="master-navbar-brand" class="navbar-brand" href="/country/0">
+                    <img id="navbar-logo" class="navbar-logo" alt="Intertug" src="{% static '' %}img/{{visual.logo}}">
+                </a>
+            </div>
+            <div class="collapse navbar-collapse navbar__collapsible" id="navbar-menu">
+                <ul id="navbar__{{visual.linksmenu.0.position}}" class="nav navbar-nav navbar__{{visual.linksmenu.0.position}}">
+                    <li class="dropdown navbar__{{visual.linksmenu.0.position}}__dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            {{visual.linksmenu.0.label}}
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            {% for flota in visual.linksmenu.0.links %}
+                            <li role="presentation"><a href="/country/{{flota.value}}">{{flota.label}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li role="presentation"><a href="{{visual.linksmenu.1.value}}">{{visual.linksmenu.1.label}}</a></li>
+                </ul>
+                <ul id="navbar__{{visual.linksmenu.2.position}}" class="nav navbar-nav navbar-{{visual.linksmenu.2.position}} navbar__{{visual.linksmenu.2.position}}">
+                    <li class="dropdown navbar__{{visual.linksmenu.2.position}}__dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            {{visual.linksmenu.2.label}}
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            {% for link in visual.linksmenu.2.links %}
+                            <li role="presentation"><a href="/{{link.value}}">{{link.label}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="sidebar">
+        {% if not path %}
+        <h3 class="sidebar__card__title">{{fleet}}</h3>
+        <div class="alert alert-info alert-dismissable sidebar__infotip" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <div id="infotip-html">
+                <p>Despliegue la lista y haga clic en cualquier remolcador para ver su información en este panel</p>
+            </div>
+        </div>
+        {% endif %}
+        {% block sidebar %}{% endblock %}
+    </section>
+
+    {% block mapscript %}{% endblock %}
+
+    {% if path %}
+        {% block search %}{% endblock %}
+    {% endif %}
+
+    {% block js %}{% endblock %}
+</body>
+
+</html>

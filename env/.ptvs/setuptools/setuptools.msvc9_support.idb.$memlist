@@ -1,0 +1,6 @@
+query_vcvarsall
+find_vcvarsall
+unpatched
+sys
+patch_for_specialized_compiler
+distutils

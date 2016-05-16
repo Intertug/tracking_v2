@@ -1,0 +1,307 @@
+{% extends 'layout/layout.html' %}
+{% load staticfiles %}
+
+{%block title%}Posición {{fleet}}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/country.css' %}">
+{% endblock %}
+{% block js %}
+<script src="{% static 'js/country.js' %}"></script>
+{% endblock %}
+
+{% block sidebar %}
+<div id="rms-dropdown" class="sidebar__rm-dropdown">
+    <div class="dropdown">
+        <button class="btn btn-default btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+            Remolcadores
+            <span class="caret"></span>
+        </button>
+        <ul id="rm-list" class="dropdown-menu dropdown-menu-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
+            {% for vessel in vessels%}
+            <li role="presentation"> <a id="{{vessel.vesselname|slugify}}" role="menuitem" tabindex="-1" href="#">{{vessel.vesselname}}</a> </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<div id="handlebar-html" class="sidebar__rm-panel">
+    {% for vs in vessels %}
+    <div class="panel panel-primary hidden" id="table-{{vs.vesselname|slugify}}">
+        <div class="panel-heading">
+            <a href="#" style="color:white;" class="pull-right">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                <span class="sr-only">Refresh</span>
+            </a>
+            <h3 class="panel-title">
+                {{vs.vesselname}}
+                {% for v in vessel %}
+                {% if v.vesselName|upper == vs.vesselname %}
+                <small style="color:white">{{v.labels.lblIMO}}: {{v.IMO}}</small>
+                {% endif %}
+                {% endfor %}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <!-- Table with vessel info -->
+            <div class="table-responsive">
+                <table class="table table-striped table-condensed">
+                    <tbody>
+                        <tr>
+                            <td>Velocidad</td>
+                            <td>{{vs.speed}}</td>
+                            <td>{{vs.gpsdate}}</td>
+                        </tr>
+                        {% if vs.rpm > -1 %}
+                        <tr>
+                            <td>RPM</td>
+                            <td>{{vs.rpm}}</td>
+                            <td>{{vs.rpmdate}}</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div style="text-align: center" class="panel-footer">
+            <div class="btn-group-sm" role="group" aria-label="...">
+                <a href="/paths/{{vs.id}}" type="button" class="btn btn-primary">Recorrido</a>
+                <!-- <button id="recorrido" vesselidselected="0" class="btn btn-primary">Recorrido</button>-->
+                <div class="btn-group btn-group-sm" role="group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        Reportes
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="#">Consumo Combustible</a>
+                        </li>
+                        <li>
+                            <a href="#">Distancias Recorridas</a>
+                        </li>
+                    </ul>
+                </div>
+                <a href="#" type="button" class="btn btn-primary">Control</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block mapscript %}
+<section class="main">
+    <div id="map-canvas" class="main__map"></div>
+</section>
+<script>
+    var infoWindow = new google.maps.InfoWindow({
+            content: ""
+    })
+    var markers = []
+    var tugs = [
+        {% for vs in vessels %}
+            ["{{vs.vesselname}}", {{vs.lat}}, {{vs.long}}, 4,"<h6>{{vs.vesselname}}</h6> <b>Velocidad</b>: {{vs.speed}} Nudos<br/> <b>Fecha</b>: {{vs.gpsdate}} <br/><br/>"],
+        {% endfor %}
+    ]
+    {% if map.platforms %}
+    var platforms = [
+        {% for p in map.platforms %}
+        {
+            icon: "{% static '' %}img/{{p.icon}}",
+            center: new google.maps.LatLng({{p.center.0}}, {{p.center.1}}),
+            name: "{{p.name}}"
+        },
+        {% endfor %}
+    ]
+
+    var docks = [
+        {% for d in map.docks %}
+        {
+            icon: "{% static '' %}img/{{d.icon}}",
+            center: new google.maps.LatLng({{d.center.0}}, {{d.center.1}}),
+            name: "{{d.name}}"
+        },
+        {% endfor %}
+    ]
+
+    var points = [
+        {% for circles in map.anchorages %}
+        {
+            center: new google.maps.LatLng({{circles.center.0}}, {{circles.center.1}}),
+            radius: {{circles.radius}},
+            html: "{{circles.name}}"
+        },
+        {% endfor %}
+    ]
+
+    var moorings = [
+        {% for moor in map.moorings %}
+        {
+            path: [new google.maps.LatLng({{moor.vertices.0.0}}, {{moor.vertices.0.1}}),
+                   new google.maps.LatLng({{moor.vertices.1.0}}, {{moor.vertices.1.1}}), 
+                   new google.maps.LatLng({{moor.vertices.2.0}}, {{moor.vertices.2.1}}), 
+                   new google.maps.LatLng({{moor.vertices.3.0}}, {{moor.vertices.3.1}}), 
+                  ],
+            html: "{{moor.name}}"
+        },
+        {% endfor %}
+    ]
+    {% endif %}
+
+    var map = null
+
+    function inicial(){
+        var center = new google.maps.LatLng({{map.center.0}}, {{map.center.1}})
+        var options = {
+            zoom: {{map.zoom}},
+            center: center,
+            mapTypeId: google.maps.MapTypeId.{{map.mapType}},
+            mapTypeControl: true,
+            streetViewControl: false,
+            scaleControl: true,
+            mapTypeControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_TOP
+            },
+            zoomControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_CENTER
+            },
+            panControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_CENTER
+            },
+            scaleControlOptions: {
+                position: google.maps.ControlPosition.BOTTOM_CENTER
+            }
+        }
+        map = new google.maps.Map(document.getElementById("map-canvas"), options)
+        setMarkers(map, tugs)
+        {% if map.platforms %}
+        setPlatforms(map, platforms)
+        setDocks(map, docks)
+        {% endif %}
+        {% if map.cluster > 0 %}
+        var mcOptions = {
+            gridSize: {{map.cluster}},
+            maxZoom: 12
+        }
+        var mc = new MarkerClusterer(map, markers, mcOptions)
+        {% endif %}
+        {% if map.platforms %}
+        for (var p in points) {
+            var circleOptions = {
+              strokeColor: '#FF0000',
+              strokeOpacity: 0.7,
+              strokeWeight: 1,
+              fillColor: '#FF0000',
+              fillOpacity: 0.40,
+              map: map,
+              center: points[p].center,
+              radius: points[p].radius,
+              html: points[p].html
+            }
+            var circle =  new google.maps.Circle(circleOptions)
+            var infoWindowTemp = new google.maps.InfoWindow({
+                size: new google.maps.Size(150,50)
+            })
+            google.maps.event.addListener(circle, 'click', function(event){
+                var point = this.center
+                infoWindowTemp.setContent(this.html)
+                if(event){
+                    point = event.latLng
+                }
+                infoWindowTemp.setPosition(point)
+                infoWindowTemp.open(map)
+            })
+        }
+        for (var i = 0; i < moorings.length; i++){
+            mooringOpt = new google.maps.Polygon({
+                paths: moorings[i]["path"],
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#FF0000',
+                fillOpacity: 0.35,
+                html: moorings[i]["html"],
+            })
+            var infoWindowTemp = new google.maps.InfoWindow({
+                size: new google.maps.Size(150,50)
+            })
+            google.maps.event.addListener(mooringOpt, 'click', function(event){
+                var point = this.getPath().getAt(0)
+                infoWindowTemp.setContent(this.html)
+                if(event){
+                    point = event.latLng
+                }
+                infoWindowTemp.setPosition(point)
+                infoWindowTemp.open(map)
+            })
+            mooringOpt.setMap(map)
+        }
+        {% endif %}
+    }
+
+    function setMarkers(map, vessels){
+       for (var i = 0; i < vessels.length; i++){
+            var tugs = vessels[i]
+            var tugsLatLon = new google.maps.LatLng(tugs[1], tugs[2])
+            var marker = new google.maps.Marker({
+                position : tugsLatLon,
+                map: map,
+                icon: "{% static '' %}img/{{vessels.0.icon}}",
+                draggable: false,
+                title: tugs[0],
+                html: tugs[4]
+            })
+            markers.push(marker)
+            google.maps.event.addListener(marker, "mouseover", function () {
+                infoWindow.setContent(this.html)
+                infoWindow.open(map, this)
+            })
+            google.maps.event.addListener(marker, "mouseout", function(){
+                infoWindow.close()
+            })
+       }
+    }
+    {% if map.platforms %}
+    function setPlatforms(map, platforms){
+       for (var p in platforms){
+            var marker = new google.maps.Marker({
+                position: platforms[p].center,
+                map: map,
+                icon: platforms[p].icon,
+                draggable: false,
+                title: platforms[p].name,
+                zIndex: 1,
+                html: "<h6>" + platforms[p].name + "</h6>"
+            })
+            google.maps.event.addListener(marker, "mouseover", function () {
+                infoWindow.setContent(this.html)
+                infoWindow.open(map, this)
+            })
+            google.maps.event.addListener(marker, "mouseout", function () {
+                infoWindow.close()
+            })
+       }
+    }
+
+    function setDocks(map, docks){
+       for (var d in docks){
+            var marker = new google.maps.Marker({
+                position: docks[d].center,
+                map: map,
+                icon: docks[d].icon,
+                draggable: false,
+                title: docks[d].name,
+                zIndex: 1,
+                html: "<h6>" + docks[d].name + "</h6>"
+            })
+            google.maps.event.addListener(marker, "mouseover", function () {
+                infoWindow.setContent(this.html)
+                infoWindow.open(map, this)
+            })
+            google.maps.event.addListener(marker, "mouseout", function () {
+                infoWindow.close()
+            })
+       }
+    }
+    {% endif %}
+    google.maps.event.addDomListener(window, 'load', inicial)
+</script>
+{% endblock %}

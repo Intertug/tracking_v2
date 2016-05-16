@@ -1,0 +1,278 @@
+body {
+  font-size: 16px;
+  background-color: white;
+}
+
+.navbar {
+  background: -webkit-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet);
+  /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet);
+  /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet);
+  /* For Fx 3.6 to 15 */
+  background: linear-gradient(to right, white, white, white, #FFFF86, #FFFF86, #FFFF86, #FFFF86, #FFFF86, #FFFF86, #FFFF86);
+  /* Standard syntax (must be last) */
+}
+
+.navbar-brand {
+  padding: 0;
+}
+
+.navbar-logo {
+  height: 50px;
+}
+
+.sidebar {
+  background: linear-gradient(white, white, #FBE38D, #FFFF86, #FFFF86, #FFFF86, #FFFF86, #FFFF86, #FFFF86);
+  position: fixed;
+  top: 50px;
+  bottom: 0px;
+  left: 0px;
+  height: -webkit-calc(100% - 50px);
+  height: -moz-calc(100% - 50px);
+  height: calc(100% - 50px);
+  width: 350px;
+  overflow: auto;
+}
+
+@media all and (max-width: 850px) {
+  .sidebar {
+    content: "";
+    visibility: hidden;
+  }
+}
+
+.sidebar__card {
+  padding: 5px;
+}
+
+.sidebar__card__title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #181E86;
+}
+
+.sidebar__card__subtitle {
+  font-weight: bold;
+  color: #222788;
+}
+
+.sidebar__card__description {
+  font-size: 1.5rem;
+  text-align: justify;
+}
+
+.sidebar__card__image {
+  width: 100%;
+}
+
+.sidebar__infotip {
+  margin: 5px;
+}
+
+.main {
+  position: fixed;
+  left: 350px;
+  top: 50px;
+  bottom: 0px;
+  width: -webkit-calc(100% - 350px);
+  width: -moz-calc(100% - 350px);
+  width: calc(100% - 350px);
+  height: -webkit-calc(100% - 50px);
+  height: -moz-calc(100% - 50px);
+  height: calc(100% - 50px);
+  overflow: auto;
+}
+
+@media all and (max-width: 850px) {
+  .main {
+    left: 0px;
+    width: 100%;
+  }
+}
+
+.main__map {
+  height: 100%;
+}
+
+.sidebar-right {
+  position: fixed;
+  top: 70px;
+  right: 0px;
+  height: 35px;
+  min-width: 30px;
+  width: auto;
+  background-color: #FFFF86;
+  border-radius: 10px 0 0 10px;
+  z-index: 1;
+}
+
+#sidebar-collapsible {
+  display: none;
+}
+
+.labels-title {
+  border-radius: inherit;
+  padding: 0;
+  position: fixed;
+  display: inline-block;
+  font-weight: normal;
+}
+
+.labels-title::before {
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  font-size: 2.5rem;
+  content: "\f137";
+  color: #181E86;
+}
+
+#sidebar-collapsible:checked ~ .labels-title::before {
+  content: "\f138";
+  position: relative;
+  right: 25px;
+  padding-right: 5px;
+  border-radius: 10px 0 0 10px;
+  background-color: white;
+}
+
+#sidebar-collapsible:checked .sidebar-right__labels__entities {
+  max-height: 250px;
+}
+
+#sidebar-collapsible:checked ~ .sidebar-right__labels {
+  background-color: #FFFF86;
+  border-radius: 10px 0 0 10px;
+  width: 200px;
+  height: auto;
+  max-height: 250px;
+  z-index: 2;
+}
+
+#sidebar-collapsible:checked ~ .sidebar-right__labels .sidebar-right__labels__entities {
+  display: block;
+}
+
+.sidebar-right__labels__entities {
+  display: none;
+}
+
+.list-group-item-heading {
+  font-size: 1.5rem;
+}
+
+.list-group-item-text {
+  font-size: 1.2rem;
+}
+
+/* Common CSS */
+p[data-color=green] {
+  color: green;
+}
+
+p[data-color=red] {
+  color: red;
+}
+
+.sidebar__card__description {
+  text-align: center;
+}
+
+.last-report {
+  text-align: center;
+}
+
+.last-report--red {
+  color: red;
+}
+
+.last-report--green {
+  color: green;
+}
+
+.alerts__panel {
+  margin: 10px 5px 5px 5px;
+  height: 68px;
+  overflow: auto;
+}
+
+.alerts__table {
+  font-size: 1.1rem;
+}
+
+.sidebar__rmpanel {
+  margin: 10px 5px 5px 5px;
+}
+
+.rmpanel__title {
+  text-align: center;
+  font-size: 2.1rem;
+}
+
+.rmpanel__opstate {
+  text-align: center;
+  font-weight: bolder;
+  font-size: 2rem;
+}
+
+.rmpanel__date {
+  text-align: center;
+  font-weight: bold;
+}
+
+.rmpanel__table {
+  background-color: #D8D8D8;
+  width: 100%;
+}
+
+.dates {
+  background-color: #FFFF86;
+  position: fixed;
+  top: 50px;
+  left: 40%;
+  width: 40%;
+  text-align: center;
+  border-radius: 0 0 10px 10px;
+}
+
+@media screen and (max-width: 650px) {
+  .dates {
+    width: 20px;
+  }
+}
+
+.dates__container {
+  margin: 5px 0 5px 0;
+}
+
+@media screen and (max-width: 650px) {
+  .dates__container {
+    display: none;
+  }
+}
+
+.sidebar-right__labels__entities {
+  width: 200px;
+}
+
+.circle::before {
+  content: '';
+  border-radius: 50%;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+}
+
+.circle--purple::before {
+  background-color: purple;
+}
+
+.circle--red::before {
+  background-color: red;
+}
+
+.circle--red::before {
+  background-color: green;
+}
