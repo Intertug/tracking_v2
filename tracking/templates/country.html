@@ -257,6 +257,12 @@
             google.maps.event.addListener(marker, "mouseout", function(){
                 infoWindow.close()
             })
+            google.maps.event.addListener(marker, "click", function () {
+                $(".panel-primary").addClass("hidden");
+                id = String(this.title).toLowerCase()
+                link = "#table-" + slugify(id)
+                $(link).toggleClass("hidden");
+            })
        }
     }
     {% if map.platforms %}

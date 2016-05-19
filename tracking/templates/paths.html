@@ -55,10 +55,10 @@
             <tr>
                 <th>
                     <span class="glyphicon glyphicon-signal">
-                    </span> {{path.labels.lblspeed}}
+                    </span> {{path.labels.lblSpeed}}
                 </th>
                 {% with lastPos=path.coordinates|last %}
-                <th>{{lastPos.speed}}</th>
+                <th id="table__speed">{{lastPos.speed}}</th>
                 {% endwith %}
             </tr>
             <tr>
@@ -125,7 +125,7 @@
     })
     var dots = [
         {% for p in path.coordinates %}
-            ["{{vessel.labels.lblVesselName|upper}}", {{p.position.lat}}, {{p.position.lon}}, 4,"<h6>{{vessel.labels.lblVesselName|upper}}</h6> <b>Velocidad</b>: {{p.speed}} Nudos<br/> <b>Fecha</b>: {{p.datetime}} <br/><br/>", "{{p.id}}"],
+            ["{{vessel.labels.lblVesselName|upper}}", {{p.position.lat}}, {{p.position.lon}}, 4,"<h6>{{vessel.labels.lblVesselName|upper}}</h6> <b>Velocidad</b>: {{p.speed}} Nudos<br/> <b>Fecha</b>: {{p.datetime}} <br/><br/>", "{{p.id}}", "{{p.speed}}", "{{p.datetime}}"],
         {% endfor %}
     ]
     {% if map.platforms %}
@@ -163,9 +163,9 @@
         {% for moor in map.moorings %}
         {
             path: [new google.maps.LatLng({{moor.vertices.0.0}}, {{moor.vertices.0.1}}),
-                   new google.maps.LatLng({{moor.vertices.1.0}}, {{moor.vertices.1.1}}), 
-                   new google.maps.LatLng({{moor.vertices.2.0}}, {{moor.vertices.2.1}}), 
-                   new google.maps.LatLng({{moor.vertices.3.0}}, {{moor.vertices.3.1}}), 
+                   new google.maps.LatLng({{moor.vertices.1.0}}, {{moor.vertices.1.1}}),
+                   new google.maps.LatLng({{moor.vertices.2.0}}, {{moor.vertices.2.1}}),
+                   new google.maps.LatLng({{moor.vertices.3.0}}, {{moor.vertices.3.1}}),
                   ],
             html: "{{moor.name}}"
         },
@@ -191,7 +191,9 @@
     }
 
     function inicial(){
-        var center = new google.maps.LatLng({{map.center.0}}, {{map.center.1}})
+        {% with lastPos=path.coordinates|last %}
+        var center = new google.maps.LatLng({{lastPos.position.lat}}, {{lastPos.position.lon}})
+        {% endwith %}
         var options = {
             zoom: {{map.zoom}},
             center: center,
@@ -319,7 +321,8 @@
                 draggable: false,
                 title: point[0],
                 html: point[4],
-                dateId: point[5]
+                dateId: point[5],
+                zIndex: 1
             })
             google.maps.event.addListener(marker, "mouseover", function () {
                 infoWindow.setContent(this.html)
@@ -327,6 +330,15 @@
             })
             google.maps.event.addListener(marker, "mouseout", function(){
                 infoWindow.close()
+            })
+            google.maps.event.addListener(marker, "click", function () {
+                id = this.dateId
+                for (i = 0; i < dots.length; i++){
+                    if (dots[i][5] == id){
+                        $(".rmpanel__date").html(dots[i][7])
+                        $("#table__speed").html(dots[i][6])
+                    }
+                }
             })
        }
     }
@@ -339,7 +351,7 @@
                 icon: platforms[p].icon,
                 draggable: false,
                 title: platforms[p].name,
-                zIndex: 1,
+                zIndex: 2,
                 html: "<h6>" + platforms[p].name + "</h6>"
             })
             google.maps.event.addListener(marker, "mouseover", function () {
@@ -360,7 +372,7 @@
                 icon: docks[d].icon,
                 draggable: false,
                 title: docks[d].name,
-                zIndex: 1,
+                zIndex: 2,
                 html: "<h6>" + docks[d].name + "</h6>"
             })
             google.maps.event.addListener(marker, "mouseover", function () {
@@ -376,6 +388,6 @@
     google.maps.event.addDomListener(window, 'load', inicial)
 </script>
 {% else %}
-    <span class="main__map main">No hay datos el día de hoy</span>
+<span class="main__map main">No hay datos el día de hoy</span>
 {% endif %}
 {% endblock %}
