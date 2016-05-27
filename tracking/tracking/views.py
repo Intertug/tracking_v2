@@ -29,7 +29,10 @@ def getVesselsPosition(si, gd):
     except:
         print "Error calling getVesselsPosition"
     data = openUrl.read()
-    tree = ET.fromstring(data)
+    try:
+        tree = ET.fromstring(data)
+    except:
+        print "Error readind the XML"
     dataJson = json.loads(tree.text)
     vessels = dataJson["vessels"]["vessel"]
     return vessels
@@ -61,6 +64,7 @@ def mapConfiguration(fi):
     return dataJson
 
 def country(request, fleet):
+
     sessionId = ""
     if (fleet == "0"):
         getData = ""
@@ -79,7 +83,7 @@ def country(request, fleet):
     for vessel in vesselsIds:
         vesselConfig.append(vesselConfiguration(vessel))
     mapConfig = mapConfiguration(fleet)
-    vars = {"vessels": vesselsPosition, "visual": visualConfig, "map": mapConfig, "vessel": vesselConfig, "fleet": fleetName}
+    vars = {"vessels": vesselsPosition, "visual": visualConfig, "map": mapConfig, "vessel": vesselConfig, "fleet": fleetName, "fleetId": fleet}
     return render(request, "country.html", vars)
 
 def index(request):

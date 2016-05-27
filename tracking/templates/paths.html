@@ -8,6 +8,7 @@
 
 {% block sidebar %}
 <header id="rm-html" class="sidebar__card">
+    <a href="/country/{{vessel.fleetId}}">Atrás Flota</a>
     <h3 class="sidebar__card__title">{{vessel.labels.lblVesselName}}</h3>
     <p class="sidebar__card__description">
         <b>{{vessel.labels.lblCallsign}}</b>: {{vessel.callsign}}
@@ -85,7 +86,8 @@
 {% block search %}
 <section class="dates">
     <div class="dates__container">
-        <form class="form form-inline" method="GET">
+        <form class="form form-inline" method="POST">
+            {% csrf_token %}
             <input type="text" class="form-control" id="date1" name="init" placeholder="2015-05-19" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
             <input type="text" class="form-control" id="date1" name="final" placeholder="2015-05-20" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
             <input type="submit" class="btn btn-primary" value="Buscar">

@@ -76,7 +76,11 @@
         {% block sidebar %}{% endblock %}
     </section>
 
-    {% block mapscript %}{% endblock %}
+    {% if not consumption %}
+        {% block mapscript %}{% endblock %}
+    {% else %}
+        {% block main %}{% endblock %}
+    {% endif %}
 
     {% if path %}
         {% block search %}{% endblock %}

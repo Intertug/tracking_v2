@@ -12,7 +12,6 @@ absolute_import
 vendored
 progress
 glob
-_markerlib
 DEBUNDLED
 cachecontrol
 lockfile

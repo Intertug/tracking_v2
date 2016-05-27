@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'paths',
+    'reports',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -82,6 +83,20 @@ DATABASES = {
     }
 }
 
+DB_PARAMS = {
+    "server": "190.242.119.122",
+    "user": "SioPlatformUsr",
+    "password": "S10Pl@tf0rm",
+    "db": "ITG-Sio"
+}
+
+CONN_STRING = """
+    Driver={{SQL Server}};
+    Server={0};
+    Database={1};
+    UID={2};
+    PWD={3};
+""".format(DB_PARAMS["server"], DB_PARAMS["db"], DB_PARAMS["user"], DB_PARAMS["password"])
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators

@@ -35,12 +35,21 @@ def alarmsLog(vi):
     return dataJson
 
 def paths(request, vessel):
+
     sessionId = ""
     getData = "vesselid=" + vessel
-    if "init" in request.GET:
-        getData += "|INIDATE=" + request.GET["init"]
-        if "final" in request.GET:
-            getData += "|ENDDATE=" + request.GET["final"]
+    if request.POST.get("init") != None and request.POST.get("final") != None:
+        if request.POST.get("init") != "" and request.POST.get("final") != "":
+            getData += "|INIDATE=" + request.POST.get("init")
+            getData += "|ENDDATE=" + request.POST.get("final")
+        elif request.POST.get("init") == "" and request.POST.get("final") != "":
+            getData += "|INIDATE=" + request.POST.get("final")
+            getData += "|ENDDATE=" + request.POST.get("final")
+        elif request.POST.get("init") != "" and request.POST.get("final") == "":
+            getData += "|INIDATE=" + request.POST.get("init")
+            getData += "|ENDDATE=" + request.POST.get("init")
+        else:
+            pass
     gpsData = getVesselGpsData(sessionId, getData)
     visualConfig = visualConfiguration("0")
     vesselConfig = vesselConfiguration(vessel)

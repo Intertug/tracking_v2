@@ -35,6 +35,16 @@
     </Compile>
     <Compile Include="tracking\paths\views.py" />
     <Compile Include="tracking\paths\__init__.py" />
+    <Compile Include="tracking\reports\admin.py" />
+    <Compile Include="tracking\reports\apps.py" />
+    <Compile Include="tracking\reports\migrations\__init__.py" />
+    <Compile Include="tracking\reports\models.py" />
+    <Compile Include="tracking\reports\tests.py" />
+    <Compile Include="tracking\reports\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tracking\reports\views.py" />
+    <Compile Include="tracking\reports\__init__.py" />
     <Compile Include="tracking\tracking\settings.py" />
     <Compile Include="tracking\tracking\urls.py" />
     <Compile Include="tracking\tracking\views.py">
@@ -47,6 +57,8 @@
     <Folder Include="tracking" />
     <Folder Include="tracking\paths\" />
     <Folder Include="tracking\paths\migrations\" />
+    <Folder Include="tracking\reports\" />
+    <Folder Include="tracking\reports\migrations\" />
     <Folder Include="tracking\static\fonts\" />
     <Folder Include="tracking\templates\" />
     <Folder Include="tracking\static\" />
@@ -85,6 +97,9 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="tracking\static\css\paths.css">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="tracking\static\css\reports.css">
       <SubType>Code</SubType>
     </Content>
     <Content Include="tracking\static\fonts\glyphicons-halflings-regular.eot" />
@@ -136,6 +151,9 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="tracking\templates\paths.html">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="tracking\templates\reports.html">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>
