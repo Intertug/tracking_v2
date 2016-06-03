@@ -1,0 +1,14 @@
+legendre
+Integral
+symbols
+bell
+test_requires_partial
+requires_partial
+Derivative
+oo
+Function
+exp
+cos
+test_super_sub
+besselj
+split_super_sub

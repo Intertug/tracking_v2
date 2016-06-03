@@ -1,0 +1,14 @@
+notempty
+multiplex
+condition
+get_function_name
+onaction
+yieldify
+debug
+division
+sfilter
+print_function
+identity
+exhaust
+chain
+do_one

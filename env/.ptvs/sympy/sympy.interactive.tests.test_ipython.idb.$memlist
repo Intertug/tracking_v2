@@ -1,0 +1,13 @@
+test_int_to_Integer
+Integer
+init_ipython_session
+Symbol
+ipython
+import_module
+test_automatic_symbols
+readline
+enable_automatic_symbols
+enable_automatic_int_sympification
+Rational
+raises
+disabled

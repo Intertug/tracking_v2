@@ -1,0 +1,15 @@
+integer_types
+_ask
+shuffle
+FactKB
+_assume_defined
+with_metaclass
+division
+_assume_rules
+print_function
+as_property
+make_property
+StdFactKB
+BasicMeta
+ManagedProperties
+FactRules

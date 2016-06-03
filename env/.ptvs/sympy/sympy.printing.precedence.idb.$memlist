@@ -1,0 +1,13 @@
+PRECEDENCE_FUNCTIONS
+precedence_FracElement
+precedence
+precedence_Float
+precedence_Integer
+PRECEDENCE_VALUES
+division
+precedence_Rational
+print_function
+precedence_PolyElement
+PRECEDENCE
+_coeff_isneg
+precedence_Mul

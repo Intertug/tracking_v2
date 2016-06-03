@@ -1,0 +1,12 @@
+variance
+E
+S
+GeometricDistribution
+density
+PoissonDistribution
+Sum
+Poisson
+test_PoissonDistribution
+test_GeometricDistribution
+x
+test_Poisson

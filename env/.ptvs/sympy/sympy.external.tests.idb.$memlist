@@ -1,0 +1,6 @@
+test_importtools
+test_sage
+test_scipy
+test_autowrap
+test_codegen
+test_numpy

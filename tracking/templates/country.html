@@ -8,6 +8,10 @@
 {% block js %}
 <script src="{% static 'js/country.js' %}"></script>
 {% endblock %}
+{% block scripts %}
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBEuaoh_rW9edjj3Ona1XpY2yOk090mJ5o&amp;sensor=true"></script>
+<script src="{% static 'js/markerclusterer.min.js' %}"></script>
+{% endblock %}
 
 {% block sidebar %}
 <div id="rms-dropdown" class="sidebar__rm-dropdown">
@@ -72,10 +76,10 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li>
-                            <a href="/reports/{{fleetId}}/{{vs.id}}">Consumo Combustible</a>
+                            <a href="/reports/fuel/{{fleetId}}/{{vs.id}}">Consumo Combustible</a>
                         </li>
                         <li>
-                            <a href="#">Distancias Recorridas</a>
+                            <a href="/reports/distance/{{fleetId}}/{{vs.id}}">Distancias Recorridas</a>
                         </li>
                     </ul>
                 </div>

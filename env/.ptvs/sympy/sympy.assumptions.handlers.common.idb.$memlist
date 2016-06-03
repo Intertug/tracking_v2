@@ -1,0 +1,9 @@
+_fuzzy_group
+Q
+conjuncts
+AskHandler
+ask
+AskCommutativeHandler
+test_closed_group
+CommonHandler
+TautologicalHandler

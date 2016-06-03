@@ -1,0 +1,4 @@
+test_implicit_multiplication_application
+test_mathematica
+test_sympy_parser
+test_maxima

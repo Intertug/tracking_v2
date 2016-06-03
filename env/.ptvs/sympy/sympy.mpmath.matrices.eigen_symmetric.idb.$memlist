@@ -1,0 +1,16 @@
+r_sy_tridiag
+xrange
+svd_r_raw
+c_he_tridiag_2
+defun
+gauss_quadrature
+svd_r
+tridiag_eigen
+c_he_tridiag_1
+svd_c
+eigsy
+c_he_tridiag_0
+eighe
+eigh
+svd_c_raw
+svd

@@ -1,0 +1,15 @@
+test_solve_lin_sys_6x6_2
+test_solve_lin_sys_3x3_inf
+test_solve_lin_sys_5x5_inf
+test_solve_lin_sys_2x2_one
+test_solve_lin_sys_2x4_none
+test_solve_lin_sys_4x7_inf
+slow
+field
+test_solve_lin_sys_3x4_one
+test_solve_lin_sys_6x6_1
+test_solve_lin_sys_3x4_none
+ZZ
+solve_lin_sys
+QQ
+ring

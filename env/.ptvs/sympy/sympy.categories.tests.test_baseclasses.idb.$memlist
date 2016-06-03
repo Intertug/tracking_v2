@@ -1,0 +1,17 @@
+EmptySet
+NamedMorphism
+Category
+Diagram
+test_diagram
+XFAIL
+Dict
+IdentityMorphism
+Tuple
+FiniteSet
+Morphism
+test_category
+test_morphisms
+Class
+raises
+CompositeMorphism
+Object

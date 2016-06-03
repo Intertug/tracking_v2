@@ -1,0 +1,17 @@
+defun_static
+secondzeta_main_term
+_zeta_zeros
+print_
+secondzeta_exp_term
+_load_zeta_zeros
+polylog_continuation
+_hurwitz_em
+secondzeta_singular_term
+polylog_series
+polylog_general
+_hurwitz_reflection
+polylog_unitcircle
+xrange
+secondzeta_prime_term
+defun_wrapped
+defun

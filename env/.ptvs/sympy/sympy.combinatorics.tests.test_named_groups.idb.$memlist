@@ -1,0 +1,10 @@
+test_SymmetricGroup
+test_CyclicGroup
+test_DihedralGroup
+test_AbelianGroup
+CyclicGroup
+DihedralGroup
+test_AlternatingGroup
+AlternatingGroup
+AbelianGroup
+SymmetricGroup

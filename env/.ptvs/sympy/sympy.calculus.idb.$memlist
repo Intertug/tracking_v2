@@ -1,0 +1,8 @@
+apply_finite_diff
+as_finite_diff
+euler
+euler_equations
+tests
+finite_diff
+finite_diff_weights
+singularities

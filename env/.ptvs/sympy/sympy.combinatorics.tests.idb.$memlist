@@ -1,0 +1,13 @@
+test_testutil
+test_prufer
+test_group_constructs
+test_named_groups
+test_polyhedron
+test_generators
+test_util
+test_subsets
+test_graycode
+test_tensor_can
+test_permutations
+test_perm_groups
+test_partitions

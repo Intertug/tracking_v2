@@ -1,0 +1,12 @@
+test_dyadic
+Dyadic
+symbols
+Matrix
+ReferenceFrame
+A
+test_dyadic_simplify
+dynamicsymbols
+Vector
+cos
+pi
+sin

@@ -1,0 +1,8 @@
+test_Pauli
+sigma1
+test_Pauli_should_work
+sigma3
+sigma2
+XFAIL
+I
+Pauli

@@ -1,0 +1,11 @@
+timeit_Symbol_eq_xy
+symbols
+S
+timeit_S_lookup
+x
+division
+timeit_Symbol_meth_lookup
+print_function
+C
+y
+timeit_C_lookup

@@ -1,0 +1,16 @@
+_naive_list_centralizer
+test_verify_centralizer
+SymmetricGroup
+test_verify_bsgs
+AlternatingGroup
+CyclicGroup
+_verify_bsgs
+_verify_centralizer
+test_verify_normal_closure
+test_cmp_perm_lists
+PermutationGroup
+Permutation
+_verify_normal_closure
+test_naive_list_centralizer
+shuffle
+_cmp_perm_lists

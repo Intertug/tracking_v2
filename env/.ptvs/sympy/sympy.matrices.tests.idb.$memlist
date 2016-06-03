@@ -1,0 +1,8 @@
+test_sparse
+test_matrices
+test_immutable
+test_densetools
+test_interactions
+test_sparsetools
+test_densesolve
+test_densearith

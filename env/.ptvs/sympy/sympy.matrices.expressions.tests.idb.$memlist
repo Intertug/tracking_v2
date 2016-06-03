@@ -1,0 +1,17 @@
+test_determinant
+test_matpow
+test_funcmatrix
+test_blockmatrix
+test_transpose
+test_adjoint
+test_factorizations
+test_trace
+test_indexing
+test_inverse
+test_hadamard
+test_slice
+test_matadd
+test_matmul
+test_fourier
+test_diagonal
+test_matrix_exprs

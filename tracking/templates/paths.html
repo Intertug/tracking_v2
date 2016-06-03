@@ -5,6 +5,24 @@
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/paths.css' %}">
 {% endblock %}
+{% block scripts %}
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBEuaoh_rW9edjj3Ona1XpY2yOk090mJ5o&amp;sensor=true"></script>
+<script src="{% static 'js/markerclusterer.min.js' %}"></script>
+{% endblock %}
+
+{% block reports %}
+<ul id="navbar__left" class="nav navbar-nav navbar__left">
+    <li class="dropdown navbar__left__dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            Reportes
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <li role="presentation"><a href="/reports/fuel/{{vessel.fleetId}}/{{vessel.vesselId}}">Consumo de Combustible</a></li>
+        </ul>
+    </li>
+</ul>
+{% endblock %}
 
 {% block sidebar %}
 <header id="rm-html" class="sidebar__card">

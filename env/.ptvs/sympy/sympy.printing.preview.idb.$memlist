@@ -1,0 +1,14 @@
+find_executable
+SymPyDeprecationWarning
+join
+BytesIO
+doctest_depends_on
+latex
+division
+shutil
+print_function
+check_output
+STDOUT
+preview
+tempfile
+CalledProcessError

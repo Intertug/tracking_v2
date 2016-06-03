@@ -1,0 +1,12 @@
+test_hyper
+test_delta_functions
+test_gamma_functions
+test_spec_polynomials
+test_tensor_functions
+test_zeta_functions
+test_spherical_harmonics
+test_bessel
+test_bsplines
+test_beta_functions
+test_error_functions
+test_elliptic_integrals

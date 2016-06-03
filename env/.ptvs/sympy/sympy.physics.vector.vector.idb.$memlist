@@ -1,0 +1,15 @@
+filldedent
+S
+Add
+__all__
+expand
+trigsimp
+sqrt
+sympify
+u
+Vector
+zeros
+Matrix
+VectorTypeError
+_check_vector
+unicode

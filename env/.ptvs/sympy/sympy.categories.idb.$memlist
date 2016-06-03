@@ -1,0 +1,14 @@
+baseclasses
+XypicDiagramDrawer
+preview_diagram
+DiagramGrid
+Category
+diagram_drawing
+IdentityMorphism
+xypic_draw_diagram
+tests
+NamedMorphism
+CompositeMorphism
+Diagram
+Morphism
+Object

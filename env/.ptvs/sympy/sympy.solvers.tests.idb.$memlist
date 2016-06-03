@@ -1,0 +1,9 @@
+test_numeric
+test_ode
+test_pde
+test_polysys
+test_solvers
+test_constantsimp
+test_inequalities
+test_recurr
+test_diophantine

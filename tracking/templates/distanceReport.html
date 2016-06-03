@@ -1,0 +1,101 @@
+{% extends 'layout/layout.html' %}
+{% load staticfiles %}
+
+{%block title%}Reporte Distancia Recorrida{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/reports.css' %}">
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['bar'] });
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Día', 'Distancia', 'Velocidad'],
+          ['{{date}}', {{distance}}, {{speed}}],
+        ]);
+
+        var options = {
+            chart: {
+                title: 'Distancia Recorrida',
+                subtitle: 'de la embarcacion en Millas Nauticas',
+            }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('column_chart'));
+
+        chart.draw(data, options);
+    }
+</script>
+{% endblock %}
+
+{% block sidebar %}
+<section class="sidebar">
+    <a href="/country/{{fleet}}">Atrás Flota</a>
+    <div class="sidebar__card">
+        {% for name in names %}
+            {% if name.id == vessel %}
+            <h2 class="sidebar__card__title">Reportes de Distancias Recorridas {{name.name}}</h2>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <form class="form sidebar__form" method="POST">
+        {% csrf_token %}
+        <div class="form__group">
+            <label for="dateone" class="control-label form__label">Fecha inicio: </label>
+            <input required type="text" id="dateone" name="dateone" class="form-control form__date form__input" placeholder="2015-05-19" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+        </div>
+        <div class="form__group">
+            <label for="datetwo" class="control-label form__label">Fecha final: </label>
+            <input required type="text" id="datetwo" name="datetwo" class="form-control form__date form__input" placeholder="2015-05-19" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+        </div>
+        <input type="submit" class="btn form-control btn-success form__submit" value="Generar">
+    </form>
+</section>
+{% endblock %}
+
+{% block mainDistance %}
+<section id="main" class="main">
+    <div class="main__tabpanel" role="tabpanel">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs main__tabpanel__list" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#column_chart" aria-controls="home" role="tab" data-toggle="tab">Gráfica</a>
+            </li>
+            <li role="presentation">
+                <a href="#table-tab" aria-controls="profile" role="tab" data-toggle="tab">Tabla</a>
+            </li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content main__tabpanel__content">
+            <div role="tabpanel" class="tab-pane active tabpanel__content_pane content__pane__chart" id="column_chart">
+            </div>
+            <div id="table-tab" role="tabpanel" class="tab-pane tabpanel__content__pane">
+                <div class="content__pane__export">
+                    <button id="exportTable" class="btn btn-success content__pane__export__btn">
+                        Excel
+                    </button>
+                </div>
+                <div id="table_chart" class="content__pane__table-container">
+                    <table id="pane__table" class="table table-bordered table-responsive pane__table">
+                        <tr>
+                            <th>Día</th>
+                            <th>Distancia Recorrida</th>
+                            <th>Velocidad Promedio</th>
+                        </tr>
+                        <tr>
+                            <td>{{date}}</td>
+                            <td>{{distance}}</td>
+                            <td>{{speed}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

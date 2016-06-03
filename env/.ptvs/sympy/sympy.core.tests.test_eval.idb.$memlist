@@ -1,0 +1,17 @@
+test_function
+Function
+test_symbol_expand
+cos
+Symbol
+test_mulpow_eval
+Rational
+I
+test_addmul_eval
+XFAIL
+test_evalpow_bug
+test_add_eval
+test_pow_eval_X1
+test_pow_eval
+sqrt
+tan
+exp

@@ -1,0 +1,17 @@
+df
+_sympifyit
+Add
+BasisDependent
+call_highest_priority
+BasisDependentMul
+tsimp
+Mul
+Expr
+StdFactKB
+Integral
+S
+BasisDependentZero
+BasisDependentAdd
+fctr
+simp
+count_ops

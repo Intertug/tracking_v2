@@ -1,0 +1,14 @@
+test_code_quality
+diagnose_imports
+test_timeutils
+test_source
+test_pytest
+test_lambdify
+test_codegen
+test_autowrap
+test_codegen_octave
+test_iterables
+test_pickling
+test_enumerative
+test_module_imports
+test_decorator

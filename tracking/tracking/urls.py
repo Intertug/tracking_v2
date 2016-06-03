@@ -16,11 +16,13 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from . import views
+from django.views.generic import RedirectView
 
 urlpatterns = [
-    url(r'^$', views.index),
+    #url(r'^$', views.index),
+    url(r'^$', RedirectView.as_view(url="country/0")),
     url(r'^country/(?P<fleet>[0-9]{1,4})/', views.country),
     url(r'^paths/', include('paths.urls')),
     url(r'^reports/', include('reports.urls')),
-    url(r'^admin/', admin.site.urls),
+    #url(r'^admin/', admin.site.urls),
 ]

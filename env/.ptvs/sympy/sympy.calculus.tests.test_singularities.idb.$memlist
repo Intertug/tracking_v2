@@ -1,0 +1,8 @@
+log
+Symbol
+test_singularities_non_rational
+raises
+XFAIL
+exp
+test_singularities
+singularities

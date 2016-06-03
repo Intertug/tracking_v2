@@ -1,0 +1,9 @@
+apply_finite_diff
+test_apply_finite_diff
+S
+test_as_finite_diff
+as_finite_diff
+symbols
+Function
+finite_diff_weights
+test_finite_diff_weights

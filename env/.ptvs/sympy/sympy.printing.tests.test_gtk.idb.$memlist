@@ -1,0 +1,6 @@
+print_gtk
+sin
+test_1
+raises
+XFAIL
+test_settings

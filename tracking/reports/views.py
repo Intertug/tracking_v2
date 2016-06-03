@@ -1,25 +1,55 @@
 from django.shortcuts import render
 import pypyodbc as sql
 from tracking.views import getVesselsPosition, visualConfiguration
+from paths.views import getVesselGpsData
 from tracking.settings import CONN_STRING as dbString
 import datetime
 import sys
+import math
+#from measurement.measures import Distance
 
-def fuelUsage(vi, dateOne, dateTwo):
-    
-    conn = sql.connect(dbString)
-    rows = selectRows(dateTwo, vi, conn)
-    if len(rows) == 0:
-        insertNewData(dateOne, dateTwo, vi, conn)
-        rows = selectNewRows(dateOne, dateTwo, vi, conn)
-        totals = createTotals(rows, dateOne, dateTwo)
-    else:
-        rows = selectNewRows(dateOne, dateTwo, vi, conn)
-        totals = createTotals(rows, dateOne, dateTwo)
-    
-    conn.close()
+def distance(request, vessel, fleet):
+    sessionId = ""
+    getData = "vesselid=" + vessel
+    gpsData = getVesselGpsData(sessionId, getData)
+    data = createDistance(gpsData["coordinates"])
+    getData = "fleetId=" + fleet
+    vesselsPosition = getVesselsPosition(sessionId, getData)
+    vesselsNames = []
+    for v in vesselsPosition:
+        var = {
+            "name": v["vesselname"],
+            "id": v["id"]
+        }
+        vesselsNames.append(var)
+    visualConfig = visualConfiguration("0")
+    date = datetime.datetime.today().isoformat().split("T")[0].replace("-", "")
+    vars = {"fleet": fleet, "distance": data["distance"], "speed": data["avgSpeed"], 
+            "names": vesselsNames, "visual": visualConfig, "vessel": vessel, "date": date}
+    return render(request, "distanceReport.html", vars)
 
-    return totals
+def createDistance(coordinates):
+    speeds = []
+    distances = []
+    radious = 6378
+    for c in range(len(coordinates) - 1):
+        lat1 = coordinates[c]["position"]["lat"]
+        lon1 = coordinates[c]["position"]["lon"]
+        lat2 = coordinates[c+1]["position"]["lat"]
+        lon2 = coordinates[c+1]["position"]["lon"]
+        a = math.cos(math.radians(90 - lat1)) * math.cos(math.radians(90 - lat2))
+        b = math.sin(math.radians(90 - lat1)) * math.sin(math.radians(90 - lat2)) * math.cos(math.radians(lon1 - lon2)) 
+        try:
+            val = math.acos(a + b) * radious
+        except:
+            val = 0
+        distances.append(val) 
+        speeds.append(coordinates[c]["speed"])
+    distanceSpeed = {
+        "distance": round(sum(distances) * 0.539956803456, 2),
+        "avgSpeed": round(sum(speeds) / len(speeds), 2)
+    }
+    return distanceSpeed
 
 def consumption(request, vessel, fleet):
     sessionId = ""
@@ -42,8 +72,31 @@ def consumption(request, vessel, fleet):
             "id": v["id"]
         }
         vesselsNames.append(var)
-    vars = {"names": vesselsNames, "visual": visualConfig, "consumption": consumption, "vessel": vessel, "fleet": fleet}
-    return render(request, "reports.html", vars)
+    bow = False
+    for c in consumption:
+        if c["BOW902"] > 0 or c["BOW901"] > 0:
+            bow = True
+            break 
+    vars = {"names": vesselsNames, "visual": visualConfig, "consumption": consumption, "vessel": vessel, 
+            "fleet": fleet, "bow": bow}
+    return render(request, "fuelReport.html", vars)
+
+def fuelUsage(vi, dateOne, dateTwo):
+    
+    conn = sql.connect(dbString)
+    rows = selectRows(dateOne, dateTwo, vi, conn)
+    if len(rows) == 0:
+        insertNewData(dateOne, dateTwo, vi, conn)
+        #rows = selectNewRows(dateOne, dateTwo, vi, conn)
+        rows = selectRows(dateOne, dateTwo, vi, conn)
+        totals = createTotals(rows, dateOne, dateTwo)
+    else:
+        #rows = selectNewRows(dateOne, dateTwo, vi, conn)
+        totals = createTotals(rows, dateOne, dateTwo)
+    
+    conn.close()
+
+    return totals
 
 def createTotals(rows, dateOne, dateTwo):
     
@@ -134,19 +187,46 @@ def createTotals(rows, dateOne, dateTwo):
     
     return daysTotals
 
-def selectRows(dateTwo, vi, conn):
+def selectRows(dateOne, dateTwo, vi, conn):
 
     cursor = conn.cursor()
     try:
         cursor.execute("""
 		    select DataCode, DataValue from [3130-ETLFuelUsage] where DateString like '{0}%'
 		    and vesselid = {1}
-	    """.format(dateTwo, vi))
+	    """.format(dateTwo[:-2], vi))
     except:
         print "Error excecuting query to select [3130-ETLFuelUsage]", sys.exc_info()[0]
     
-    rows = cursor.fetchall()
+    rows1 = cursor.fetchall()
     cursor.close()
+    #####################
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+		    select DataCode, DataValue from [3130-ETLFuelUsage] where DateString like '{0}%'
+		    and vesselid = {1}
+	    """.format(dateOne, vi))
+    except:
+        print "Error excecuting query to select [3130-ETLFuelUsage]", sys.exc_info()[0]
+    
+    rows2 = cursor.fetchall()
+    cursor.close()
+
+    if len(rows1) > 0 and len(rows2) > 0:
+        cursor = conn.cursor()
+        try:
+            cursor.execute("""
+                select DataCode, DataValue, DateString from [3130-ETLFuelUsage] where DateString <= '{0}' and DateString >= '{2}'
+                and vesselid = {1}
+            """.format(dateTwo, vi, dateOne))
+        except:
+            print "Error excecuting query to select [3130-ETLFuelUsage]", sys.exc_info()[0]
+    
+        rows = cursor.fetchall()
+        cursor.close()
+    else:
+        rows = []
     
     return rows
 

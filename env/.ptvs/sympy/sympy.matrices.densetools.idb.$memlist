@@ -1,0 +1,15 @@
+conjugate
+row
+rowadd
+rowmul
+col
+xrange
+eye
+conjugate_row
+trace
+conjugate_transpose
+isHermitian
+rowswap
+transpose
+QQ
+augment

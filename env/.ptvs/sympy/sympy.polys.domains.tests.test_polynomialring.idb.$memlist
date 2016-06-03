@@ -1,0 +1,14 @@
+test_globalring
+test_build_order
+test_conversion
+CoercionFailed
+ExactQuotientFailed
+x
+PolynomialRing
+NotReversible
+test_localring
+ZZ
+raises
+y
+QQ
+test_units

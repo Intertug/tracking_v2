@@ -1,0 +1,17 @@
+trigintegrate
+cot
+sec
+Symbol
+Rational
+Piecewise
+Eq
+test_trigintegrate_mixed
+test_trigintegrate_symbolic
+csc
+cos
+log
+test_trigintegrate_even
+test_trigintegrate_odd
+sin
+tan
+x

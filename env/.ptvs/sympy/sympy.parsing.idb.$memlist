@@ -1,0 +1,6 @@
+maxima
+sympy_tokenize
+tests
+sympy_parser
+mathematica
+ast_parser

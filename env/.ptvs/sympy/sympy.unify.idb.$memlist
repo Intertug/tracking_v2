@@ -1,0 +1,7 @@
+core
+usympy
+rewrite
+unify
+tests
+rewriterule
+rebuild

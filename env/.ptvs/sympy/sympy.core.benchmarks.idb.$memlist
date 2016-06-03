@@ -1,0 +1,6 @@
+bench_assumptions
+bench_numbers
+bench_expand
+bench_arit
+bench_sympify
+bench_basic
