@@ -11,8 +11,24 @@ import math
 def distance(request, vessel, fleet):
     sessionId = ""
     getData = "vesselid=" + vessel
-    gpsData = getVesselGpsData(sessionId, getData)
-    data = createDistance(gpsData["coordinates"])
+    data = []
+    if request.POST.get("dateone") and request.POST.get("datetwo"):
+        dateOne = request.POST.get("dateone")
+        dateTwo = request.POST.get("datetwo")
+        dateOne = datetime.date(int(dateOne.split("-")[0]), int(dateOne.split("-")[1]), int(dateOne.split("-")[2]))
+        dateTwo = datetime.date(int(dateTwo.split("-")[0]), int(dateTwo.split("-")[1]), int(dateTwo.split("-")[2]))
+        while dateOne <= dateTwo:
+            dateTemp = dateOne.isoformat()
+            getData += "|INIDATE=" + dateTemp
+            getData += "|ENDDATE=" + dateTemp
+            gpsData = getVesselGpsData(sessionId, getData)
+            data.append(createDistance(gpsData["coordinates"], dateTemp))
+            getData = "vesselid=" + vessel
+            dateOne += datetime.timedelta(days=1)
+    else:
+        dateOne = datetime.datetime.today().isoformat().split("T")[0]
+        gpsData = getVesselGpsData(sessionId, getData)
+        data.append(createDistance(gpsData["coordinates"], dateOne))
     getData = "fleetId=" + fleet
     vesselsPosition = getVesselsPosition(sessionId, getData)
     vesselsNames = []
@@ -23,12 +39,11 @@ def distance(request, vessel, fleet):
         }
         vesselsNames.append(var)
     visualConfig = visualConfiguration("0")
-    date = datetime.datetime.today().isoformat().split("T")[0].replace("-", "")
-    vars = {"fleet": fleet, "distance": data["distance"], "speed": data["avgSpeed"], 
-            "names": vesselsNames, "visual": visualConfig, "vessel": vessel, "date": date}
+    date = datetime.datetime.today().isoformat().split("T")[0]
+    vars = {"fleet": fleet, "data": data, "names": vesselsNames, "visual": visualConfig, "vessel": vessel}
     return render(request, "distanceReport.html", vars)
 
-def createDistance(coordinates):
+def createDistance(coordinates, date):
     speeds = []
     distances = []
     radious = 6378
@@ -47,7 +62,8 @@ def createDistance(coordinates):
         speeds.append(coordinates[c]["speed"])
     distanceSpeed = {
         "distance": round(sum(distances) * 0.539956803456, 2),
-        "avgSpeed": round(sum(speeds) / len(speeds), 2)
+        "avgSpeed": round(sum(speeds) / len(speeds), 2),
+        "date": date
     }
     return distanceSpeed
 

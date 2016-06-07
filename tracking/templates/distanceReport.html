@@ -16,7 +16,9 @@
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Día', 'Distancia', 'Velocidad'],
-          ['{{date}}', {{distance}}, {{speed}}],
+          {% for d in data %}
+          ['{{d.date}}', {{d.distance}}, {{d.avgSpeed}}],
+          {% endfor %}
         ]);
 
         var options = {
@@ -87,11 +89,13 @@
                             <th>Distancia Recorrida</th>
                             <th>Velocidad Promedio</th>
                         </tr>
+                        {% for d in data %}
                         <tr>
-                            <td>{{date}}</td>
-                            <td>{{distance}}</td>
-                            <td>{{speed}}</td>
+                            <td>{{d.date}}</td>
+                            <td>{{d.distance}}</td>
+                            <td>{{d.avgSpeed}}</td>
                         </tr>
+                        {% endfor %}
                     </table>
                 </div>
             </div>
