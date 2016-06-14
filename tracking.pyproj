@@ -134,7 +134,10 @@
     <Content Include="tracking\static\img\vali.jpg" />
     <Content Include="tracking\static\js\bootstrap.js" />
     <Content Include="tracking\static\js\bootstrap.min.js" />
-    <Content Include="tracking\static\js\country.js">
+    <Content Include="tracking\static\js\focusInput.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="tracking\static\js\zoomVessel.js">
       <SubType>Code</SubType>
     </Content>
     <Content Include="tracking\static\js\jquery.min.js" />

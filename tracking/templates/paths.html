@@ -7,7 +7,9 @@
 {% endblock %}
 {% block scripts %}
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBEuaoh_rW9edjj3Ona1XpY2yOk090mJ5o&amp;sensor=true"></script>
-<script src="{% static 'js/markerclusterer.min.js' %}"></script>
+{% endblock %}
+{% block js %}
+<script src="{% static 'js/focusInput.js' %}"></script>
 {% endblock %}
 
 {% block reports %}
@@ -106,8 +108,8 @@
     <div class="dates__container">
         <form class="form form-inline" method="POST">
             {% csrf_token %}
-            <input type="text" class="form-control" id="date1" name="init" placeholder="2015-05-19" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
-            <input type="text" class="form-control" id="date1" name="final" placeholder="2015-05-20" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+            <input type="text" class="form-control" id="date1" name="init" placeholder="{{dates.init}}" value="{{dates.init}}" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+            <input type="text" class="form-control" id="date1" name="final" placeholder="{{dates.final}}" value="{{dates.final}}" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
             <input type="submit" class="btn btn-primary" value="Buscar">
         </form>
     </div>
