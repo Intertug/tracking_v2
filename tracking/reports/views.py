@@ -20,6 +20,10 @@ def distance(request, vessel, fleet):
     if request.POST.get("dateone") and request.POST.get("datetwo"):
         dateOne = request.POST.get("dateone")
         dateTwo = request.POST.get("datetwo")
+        dates = {
+            "init": dateOne,
+            "final": dateTwo
+        }
         #creates a datetimes from strings of the request
         dateOne = datetime.date(int(dateOne.split("-")[0]), int(dateOne.split("-")[1]), int(dateOne.split("-")[2]))
         dateTwo = datetime.date(int(dateTwo.split("-")[0]), int(dateTwo.split("-")[1]), int(dateTwo.split("-")[2]))
@@ -35,6 +39,10 @@ def distance(request, vessel, fleet):
     else:
         #just brings the data from today
         dateOne = datetime.datetime.today().isoformat().split("T")[0]
+        dates = {
+            "init": dateOne,
+            "final": dateOne
+        }
         gpsData = getVesselGpsData(sessionId, getData)
         data.append(createDistance(gpsData["coordinates"], dateOne))
     getData = "fleetId=" + fleet
@@ -48,7 +56,7 @@ def distance(request, vessel, fleet):
         }
         vesselsNames.append(var)
     visualConfig = visualConfiguration("0")
-    vars = {"fleet": fleet, "data": data, "names": vesselsNames, "visual": visualConfig, "vessel": vessel}
+    vars = {"fleet": fleet, "data": data, "names": vesselsNames, "visual": visualConfig, "vessel": vessel, "dates": dates}
     return render(request, "distanceReport.html", vars)
 
 def createDistance(coordinates, date):
@@ -75,9 +83,13 @@ def createDistance(coordinates, date):
             val = 0
         distances.append(val) 
         speeds.append(coordinates[c]["speed"])
+    try:
+        avgSpeed = round(sum(speeds) / len(speeds), 2)#could throw 0 division
+    except:
+        avgSpeed = 0.0
     distanceSpeed = {
         "distance": round(sum(distances) * 0.539956803456, 2), #convert the distance in Km to Nautical Miles
-        "avgSpeed": round(sum(speeds) / len(speeds), 2), #create the average of speed in the date (knots)
+        "avgSpeed": avgSpeed, #create the average of speed in the date (knots)
         "date": date
     }
     return distanceSpeed
@@ -94,6 +106,10 @@ def consumption(request, vessel, fleet):
     if request.POST.get("dateone") and request.POST.get("datetwo"):
         dateOne = request.POST.get("dateone").replace("-", "")
         dateTwo = request.POST.get("datetwo").replace("-", "") + "23"
+        dates = {
+            "init": request.POST.get("dateone"),
+            "final": request.POST.get("datetwo")
+        }
         consumption = fuelUsage(vessel, dateOne, dateTwo)
     else:
         #if not, just the range of today until now
@@ -101,6 +117,10 @@ def consumption(request, vessel, fleet):
         dateTwo =  (datetime.datetime.today().isoformat().split("T")[0].replace("-", "") + 
                     str((datetime.datetime.today() - datetime.timedelta(hours=1)).isoformat().split("T")[1][:2]))
         consumption = fuelUsage(vessel, dateOne, dateTwo)
+        dates = {
+            "init": datetime.datetime.today().isoformat().split("T")[0],
+            "final": datetime.datetime.today().isoformat().split("T")[0]
+        }
     visualConfig = visualConfiguration("0")
     vesselsNames = []
     #gets all the names and vesselsIds
@@ -117,7 +137,7 @@ def consumption(request, vessel, fleet):
             bow = True
             break 
     vars = {"names": vesselsNames, "visual": visualConfig, "consumption": consumption, "vessel": vessel, 
-            "fleet": fleet, "bow": bow}
+            "fleet": fleet, "bow": bow, "dates": dates}
     return render(request, "fuelReport.html", vars)
 
 def fuelUsage(vi, dateOne, dateTwo):

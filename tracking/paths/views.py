@@ -5,6 +5,26 @@ import json
 from tracking.views import mapConfiguration, vesselConfiguration, visualConfiguration
 import datetime
 
+def getDaqValue(si, gd):
+    '''
+    Function to call the webservice GetDaqValue/ with a vesselId and a getData param given 
+    and return a Json dict with the data
+    '''
+    url= "http://190.242.119.122:82/sioservices/daqonboardservice.asmx/GetDaqValue?"
+    sessionId = si
+    getData = gd
+    params = "SessionID=" + sessionId
+    params += "&GetData=" + getData
+    url += params
+    try:
+        openUrl = urllib.urlopen(url)
+    except:
+        print "Error calling getVesselGpsData"
+    data = openUrl.read()
+    tree = ET.fromstring(data) #the Json is inside an XML, first node
+    dataJson = json.loads(tree.text)
+    return dataJson
+
 def getVesselGpsData(si, gd):
     '''
     Function to call the webservice GetVesselGpsData/ with a vesselId and a getData param given 
@@ -81,10 +101,18 @@ def paths(request, vessel):
             "final": datetime.datetime.today().isoformat().split("T")[0]
         }
     gpsData = getVesselGpsData(sessionId, getData)
+    getData = "vesselid=" + vessel
+    try:
+        dateId = gpsData["coordinates"][-1]["id"]
+    except:
+        dateId = dates["init"]
+    getData += "|datestring=" + str(dateId)
+    daqValue = getDaqValue(sessionId, getData)
+    dates["value"] = daqValue["_dte"]
     visualConfig = visualConfiguration("0")
     vesselConfig = vesselConfiguration(vessel)
     mapConfig = mapConfiguration(str(vesselConfig["fleetId"]))
     alarms_log = alarmsLog(vessel)
     vars = {"path": gpsData, "visual": visualConfig, "map": mapConfig, "vessel": vesselConfig, 
-            "alarms": alarms_log, "dates": dates}
+            "alarms": alarms_log, "dates": dates, "value": daqValue}
     return render(request, "paths.html", vars)

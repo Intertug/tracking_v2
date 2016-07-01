@@ -66,11 +66,11 @@
         {% csrf_token %}
         <div class="form__group">
             <label for="dateone" class="control-label form__label">Fecha inicio: </label>
-            <input required type="text" id="dateone" name="dateone" class="form-control form__date form__input" placeholder="2015-05-19" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+            <input required type="text" id="dateone" name="dateone" class="form-control form__date form__input" placeholder="{{dates.init}}" value="{{dates.init}}" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
         </div>
         <div class="form__group">
             <label for="datetwo" class="control-label form__label">Fecha final: </label>
-            <input required type="text" id="datetwo" name="datetwo" class="form-control form__date form__input" placeholder="2015-05-19" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+            <input required type="text" id="datetwo" name="datetwo" class="form-control form__date form__input" placeholder="{{dates.final}}" value="{{dates.final}}" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
         </div>
         <input type="submit" class="btn form-control btn-success form__submit" value="Generar">
     </form>
