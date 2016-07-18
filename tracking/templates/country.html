@@ -22,7 +22,7 @@
         </button>
         <ul id="rm-list" class="dropdown-menu dropdown-menu-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
             {% for vessel in vessels%}
-            <li role="presentation"> <a id="{{vessel.vesselname|slugify}}" role="menuitem" tabindex="-1" href="#">{{vessel.vesselname}}</a> </li>
+            <li role="presentation"> <a id="{{vessel.vesselname|slugify}}" role="menuitem" tabindex="-1" href="#">{{vessel.id}} - {{vessel.vesselname}}</a> </li>
             {% endfor %}
         </ul>
     </div>
@@ -38,9 +38,9 @@
             <h3 class="panel-title">
                 {{vs.vesselname}}
                 {% for v in vessel %}
-                {% if v.vesselName|upper == vs.vesselname %}
-                <small style="color:white">{{v.labels.lblIMO}}: {{v.IMO}}</small>
-                {% endif %}
+                    {% if v.vesselName|upper == vs.vesselname %}
+                    <small style="color:white">{{v.labels.lblIMO}}: {{v.IMO}}</small>
+                    {% endif %}
                 {% endfor %}
             </h3>
         </div>

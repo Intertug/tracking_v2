@@ -2,64 +2,14 @@ from django.shortcuts import render
 import urllib
 import xml.etree.ElementTree as ET
 import json
-from tracking.views import mapConfiguration, vesselConfiguration, visualConfiguration
 import datetime
-
-def getDaqValue(si, gd):
-    '''
-    Function to call the webservice GetDaqValue/ with a vesselId and a getData param given 
-    and return a Json dict with the data
-    '''
-    url= "http://190.242.119.122:82/sioservices/daqonboardservice.asmx/GetDaqValue?"
-    sessionId = si
-    getData = gd
-    params = "SessionID=" + sessionId
-    params += "&GetData=" + getData
-    url += params
-    try:
-        openUrl = urllib.urlopen(url)
-    except:
-        print "Error calling getVesselGpsData"
-    data = openUrl.read()
-    tree = ET.fromstring(data) #the Json is inside an XML, first node
-    dataJson = json.loads(tree.text)
-    return dataJson
-
-def getVesselGpsData(si, gd):
-    '''
-    Function to call the webservice GetVesselGpsData/ with a vesselId and a getData param given 
-    and return a Json dict with the data
-    '''
-    url= "http://190.242.119.122:82/sioservices/daqonboardservice.asmx/GetVesselGpsData?"
-    sessionId = si
-    getData = gd
-    params = "SessionID=" + sessionId
-    params += "&GetData=" + getData
-    url += params
-    try:
-        openUrl = urllib.urlopen(url)
-    except:
-        print "Error calling getVesselGpsData"
-    data = openUrl.read()
-    tree = ET.fromstring(data) #the Json is inside an XML, first node
-    dataJson = json.loads(tree.text)
-    return dataJson
-
-def alarmsLog(vi):
-    '''
-    Function to call the webservice alarmsLog/ with a vesselId param given
-    and return the Json data
-    '''
-    url= "http://nautilus.intertug.com:8080/api/alarmsLog/"
-    vesselId = vi
-    url += vesselId
-    try:
-        openUrl = urllib.urlopen(url)
-    except:
-        print "Error calling alarmsLog"
-    data = openUrl.read()
-    dataJson = json.loads(data)
-    return dataJson
+from tracking.webServicesCalls import getXML, getJSON
+from tracking.settings import (DAQ_VALUE_URL as daqVal,
+                               VESSEL_CINFIGURATION_URL as vsConf, 
+                               VISUAL_CONFIGURATION_URL as visualConf,
+                               MAP_CONFIGURATION_URL as mapConf, 
+                               VESSEL_GPS_DATA_URL as vsGpsData,
+                               ALARMS_LOG_URL as alLog)
 
 def paths(request, vessel):
     '''
@@ -100,19 +50,25 @@ def paths(request, vessel):
             "init": datetime.datetime.today().isoformat().split("T")[0],
             "final": datetime.datetime.today().isoformat().split("T")[0]
         }
-    gpsData = getVesselGpsData(sessionId, getData)
+    gpsData = getXML(sessionId, getData, vsGpsData)
     getData = "vesselid=" + vessel
     try:
         dateId = gpsData["coordinates"][-1]["id"]
     except:
         dateId = dates["init"]
+    if len(str(dateId)) > 10:
+        dateStr = str(dateId)
+        dates["value"] = "{}-{}-{} {}:{}:{}".format(dateStr[:4], dateStr[4:6], dateStr[6:8], dateStr[8:10], dateStr[10:12], dateStr[12:14])
+    else:
+        date1 = datetime.datetime.today().isoformat().split("T")[0]
+        date2 = datetime.datetime.today().isoformat().split("T")[1]
+        dates["value"] = "{} {}".format(date1, date2[:8])
     getData += "|datestring=" + str(dateId)
-    daqValue = getDaqValue(sessionId, getData)
-    dates["value"] = daqValue["_dte"]
-    visualConfig = visualConfiguration("0")
-    vesselConfig = vesselConfiguration(vessel)
-    mapConfig = mapConfiguration(str(vesselConfig["fleetId"]))
-    alarms_log = alarmsLog(vessel)
+    daqValue = getXML(sessionId, getData, daqVal)
+    visualConfig = getJSON("0", visualConf)
+    vesselConfig = getJSON(vessel, vsConf)
+    mapConfig = getJSON(str(vesselConfig["fleetId"]), mapConf)
+    alarms_log = getJSON(vessel, alLog)
     vars = {"path": gpsData, "visual": visualConfig, "map": mapConfig, "vessel": vesselConfig, 
             "alarms": alarms_log, "dates": dates, "value": daqValue}
     return render(request, "paths.html", vars)

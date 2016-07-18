@@ -1,12 +1,13 @@
 from django.shortcuts import render
 import pypyodbc as sql
-from tracking.views import getVesselsPosition, visualConfiguration
-from paths.views import getVesselGpsData
+from tracking.webServicesCalls import getXML, getJSON
+from tracking.settings import (VESSELS_POSITION_URL as vsPos,
+                               VISUAL_CONFIGURATION_URL as visualConf, 
+                               VESSEL_GPS_DATA_URL as vsGpsData)
 from tracking.settings import CONN_STRING as dbString
 import datetime
 import sys
 import math
-#from measurement.measures import Distance
 
 def distance(request, vessel, fleet):
     '''
@@ -32,7 +33,7 @@ def distance(request, vessel, fleet):
             dateTemp = dateOne.isoformat()
             getData += "|INIDATE=" + dateTemp
             getData += "|ENDDATE=" + dateTemp
-            gpsData = getVesselGpsData(sessionId, getData)
+            gpsData = getXML(sessionId, getData, vsGpsData)
             data.append(createDistance(gpsData["coordinates"], dateTemp))
             getData = "vesselid=" + vessel
             dateOne += datetime.timedelta(days=1)
@@ -43,10 +44,10 @@ def distance(request, vessel, fleet):
             "init": dateOne,
             "final": dateOne
         }
-        gpsData = getVesselGpsData(sessionId, getData)
+        gpsData = getXML(sessionId, getData, vsGpsData)
         data.append(createDistance(gpsData["coordinates"], dateOne))
     getData = "fleetId=" + fleet
-    vesselsPosition = getVesselsPosition(sessionId, getData)
+    vesselsPosition = getXML(sessionId, getData, vsPos)
     vesselsNames = []
     #gets all the names and vesselsIds
     for v in vesselsPosition:
@@ -55,7 +56,7 @@ def distance(request, vessel, fleet):
             "id": v["id"]
         }
         vesselsNames.append(var)
-    visualConfig = visualConfiguration("0")
+    visualConfig = getJSON("0", visualConf)
     vars = {"fleet": fleet, "data": data, "names": vesselsNames, "visual": visualConfig, "vessel": vessel, "dates": dates}
     return render(request, "distanceReport.html", vars)
 
@@ -101,7 +102,7 @@ def consumption(request, vessel, fleet):
     '''
     sessionId = ""
     getData = "fleetId=" + fleet
-    vesselsPosition = getVesselsPosition(sessionId, getData)
+    vesselsPosition = getXML(sessionId, getData, vsPos)
     #sees if in the request comes a POST to create a biger report and the range of the report
     if request.POST.get("dateone") and request.POST.get("datetwo"):
         dateOne = request.POST.get("dateone").replace("-", "")
@@ -121,7 +122,7 @@ def consumption(request, vessel, fleet):
             "init": datetime.datetime.today().isoformat().split("T")[0],
             "final": datetime.datetime.today().isoformat().split("T")[0]
         }
-    visualConfig = visualConfiguration("0")
+    visualConfig = getJSON("0", visualConf)
     vesselsNames = []
     #gets all the names and vesselsIds
     for v in vesselsPosition:
@@ -269,33 +270,30 @@ def selectRows(dateOne, dateTwo, vi, conn):
     Function that receives a range of dates, a vesselId an a connection to the db to select the range
     returns a list of dicts
     '''
-    cursor = conn.cursor()
-    try:
-        #selects all the data from the start date
-        cursor.execute("""
-		    select DataCode, DataValue from [3130-ETLFuelUsage] where DateString like '{0}%'
-		    and vesselid = {1}
-	    """.format(dateTwo[:-2], vi))
-    except:
-        print "Error excecuting query to select [3130-ETLFuelUsage]", sys.exc_info()[0]
-    
-    rows1 = cursor.fetchall()
-    cursor.close()
-    #####################
-    cursor = conn.cursor()
-    try:
-        #selects all the data from the end date
-        cursor.execute("""
-		    select DataCode, DataValue from [3130-ETLFuelUsage] where DateString like '{0}%'
-		    and vesselid = {1}
-	    """.format(dateOne, vi))
-    except:
-        print "Error excecuting query to select [3130-ETLFuelUsage]", sys.exc_info()[0]
-    
-    rows2 = cursor.fetchall()
-    cursor.close()
+    date1 = datetime.date(int(dateOne[0:4]), int(dateOne[4:6]), int(dateOne[6:8]))
+    date2 = datetime.date(int(dateTwo[0:4]), int(dateTwo[4:6]), int(dateTwo[6:8]))
+    flags = []
+    while date1 <= date2:
+        rows1 = []
+        dateTemp = date1.isoformat().split("T")[0].replace("-", "")
+        cursor = conn.cursor()
+        try:
+            #selects all the data from the start date
+            cursor.execute("""
+		        select DataCode, DataValue from [3130-ETLFuelUsage] where DateString like '{0}%'
+		        and vesselid = {1}
+	        """.format(dateTemp, vi))
+        except:
+            print "Error excecuting query to select [3130-ETLFuelUsage]", sys.exc_info()[0]
+        rows1 = cursor.fetchall()
+        cursor.close()
+        if len(rows1) > 0:
+            flags.append(1)
+        else:
+            flags.append(0)
+        date1 += datetime.timedelta(days=1)
     #if there ara data in both dates, proceed to select all the date in that range
-    if len(rows1) > 0 and len(rows2) > 0:
+    if not(0 in flags):
         cursor = conn.cursor()
         try:
             #selects all the data in the range needed
@@ -313,24 +311,6 @@ def selectRows(dateOne, dateTwo, vi, conn):
         rows = []
     
     return rows
-
-'''
-def selectNewRows(dateOne, dateTwo, vi, conn):
-
-    cursor = conn.cursor()
-    try:
-        cursor.execute("""
-            select DataCode, DataValue, DateString from [3130-ETLFuelUsage] where DateString <= '{0}' and DateString >= '{2}'
-            and vesselid = {1}
-        """.format(dateTwo, vi, dateOne))
-    except:
-        print "Error excecuting query to select [3130-ETLFuelUsage]", sys.exc_info()[0]
-    
-    rows = cursor.fetchall()
-    cursor.close()
-    
-    return rows
-'''
 
 def insertNewData(dateOne, dateTwo, vi, conn):
     '''
@@ -353,7 +333,6 @@ def insertNewData(dateOne, dateTwo, vi, conn):
     rows = cursor.fetchall()
     cursor.close()
     hours = []
-    #
     if len(rows) == 0:
         return
     else:

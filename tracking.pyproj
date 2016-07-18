@@ -50,6 +50,9 @@
     <Compile Include="tracking\tracking\views.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="tracking\tracking\webServicesCalls.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="tracking\tracking\wsgi.py" />
     <Compile Include="tracking\tracking\__init__.py" />
   </ItemGroup>

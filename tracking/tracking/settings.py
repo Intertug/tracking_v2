@@ -141,3 +141,11 @@ STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static'),
         '/Users/Ruben Melo/Documents/Projects/tracking_v2/tracking/static/',
 ]
+
+VESSEL_CINFIGURATION_URL = "http://nautilus.intertug.com:8080/api/vesselconfiguration/"
+VESSELS_POSITION_URL = "http://190.242.119.122:82/sioservices/daqonboardservice.asmx/GetVesselsPosition?"
+VISUAL_CONFIGURATION_URL = "http://nautilus.intertug.com:8080/api/visualconfiguration/"
+MAP_CONFIGURATION_URL = "http://nautilus.intertug.com:8080/api/mapconfiguration/"
+DAQ_VALUE_URL = "http://190.242.119.122:82/sioservices/daqonboardservice.asmx/GetDaqValue?"
+VESSEL_GPS_DATA_URL = "http://190.242.119.122:82/sioservices/daqonboardservice.asmx/GetVesselGpsData?"
+ALARMS_LOG_URL = "http://nautilus.intertug.com:8080/api/alarmsLog/"
