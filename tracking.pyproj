@@ -24,6 +24,16 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="tracking\alerts\admin.py" />
+    <Compile Include="tracking\alerts\apps.py" />
+    <Compile Include="tracking\alerts\migrations\__init__.py" />
+    <Compile Include="tracking\alerts\models.py" />
+    <Compile Include="tracking\alerts\tests.py" />
+    <Compile Include="tracking\alerts\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tracking\alerts\views.py" />
+    <Compile Include="tracking\alerts\__init__.py" />
     <Compile Include="tracking\manage.py" />
     <Compile Include="tracking\paths\admin.py" />
     <Compile Include="tracking\paths\apps.py" />
@@ -58,6 +68,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="tracking" />
+    <Folder Include="tracking\alerts\" />
+    <Folder Include="tracking\alerts\migrations\" />
     <Folder Include="tracking\paths\" />
     <Folder Include="tracking\paths\migrations\" />
     <Folder Include="tracking\reports\" />
@@ -85,6 +97,9 @@
     </Interpreter>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="tracking\static\css\alerts.css">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="tracking\static\css\bootstrap-theme.css" />
     <Content Include="tracking\static\css\bootstrap-theme.css.map" />
     <Content Include="tracking\static\css\bootstrap-theme.min.css" />
@@ -137,6 +152,9 @@
     <Content Include="tracking\static\img\vali.jpg" />
     <Content Include="tracking\static\js\bootstrap.js" />
     <Content Include="tracking\static\js\bootstrap.min.js" />
+    <Content Include="tracking\static\js\changeColor.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="tracking\static\js\focusInput.js">
       <SubType>Code</SubType>
     </Content>
@@ -147,6 +165,9 @@
     <Content Include="tracking\static\js\markerclusterer.js" />
     <Content Include="tracking\static\js\markerclusterer.min.js" />
     <Content Include="tracking\static\js\npm.js" />
+    <Content Include="tracking\templates\alerts.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="tracking\templates\distanceReport.html">
       <SubType>Code</SubType>
     </Content>

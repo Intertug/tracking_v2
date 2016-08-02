@@ -21,12 +21,13 @@
         </a>
         <ul class="dropdown-menu" role="menu">
             <li role="presentation"><a href="/reports/fuel/{{vessel.fleetId}}/{{vessel.vesselId}}">Consumo de Combustible</a></li>
+            <li role="presentation"><a href="/reports/distance/{{vessel.fleetId}}/{{vessel.vesselId}}">Distancia Recorrida</a></li>
         </ul>
     </li>
 </ul>
 {% endblock %}
 
-{% block sidebar %}
+{% block sidebarPaths %}
 <header id="rm-html" class="sidebar__card">
     <a href="/country/{{vessel.fleetId}}">Atrás Flota</a>
     <h3 class="sidebar__card__title">{{vessel.labels.lblVesselName}}</h3>
@@ -125,7 +126,7 @@
 </section>
 {% endblock %}
 
-{% block mapscript %}
+{% block mapscriptPaths %}
 {% if path.coordinates|length > 0 %}
 <section class="main">
     <div id="map-canvas" class="main__map"></div>
@@ -141,7 +142,7 @@
             "{{p.id}}", "{{p.speed}}", "{{p.datetime}}"],
         {% endfor %}
     ]
-    {% if map.platforms %}
+    {% if map.docks %}
     var platforms = [
         {% for p in map.platforms %}
         {
@@ -254,7 +255,7 @@
         })
 
         setMarkers(map, dots)
-        {% if map.platforms %}
+        {% if map.docks %}
         setPlatforms(map, platforms)
         setDocks(map, docks)
         {% endif %}
@@ -265,7 +266,7 @@
         }
         var mc = new MarkerClusterer(map, markers, mcOptions)
         {% endif %}
-        {% if map.platforms %}
+        {% if map.docks %}
         for (var p in points) {
             var circleOptions = {
               strokeColor: '#FF0000',
@@ -379,7 +380,7 @@
             })
        }
     }
-    {% if map.platforms %}
+    {% if map.docks %}
     function setPlatforms(map, platforms){
        for (var p in platforms){
             var marker = new google.maps.Marker({

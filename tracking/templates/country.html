@@ -13,7 +13,7 @@
 <script src="{% static 'js/markerclusterer.min.js' %}"></script>
 {% endblock %}
 
-{% block sidebar %}
+{% block sidebarCountry %}
 <div id="rms-dropdown" class="sidebar__rm-dropdown">
     <div class="dropdown">
         <button class="btn btn-default btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
@@ -91,7 +91,7 @@
 </div>
 {% endblock %}
 
-{% block mapscript %}
+{% block mapscriptCountry %}
 <section class="main">
     <div id="map-canvas" class="main__map"></div>
 </section>
@@ -105,7 +105,7 @@
             ["{{vs.vesselname}}", {{vs.lat}}, {{vs.long}}, 4,"<h6>{{vs.vesselname}}</h6> <b>Velocidad</b>: {{vs.speed}} Nudos<br/> <b>Fecha</b>: {{vs.gpsdate}} <br/><br/>"],
         {% endfor %}
     ]
-    {% if map.platforms %}
+    {% if map.docks %}
     var platforms = [
         {% for p in map.platforms %}
         {
@@ -176,7 +176,7 @@
         }
         map = new google.maps.Map(document.getElementById("map-canvas"), options)
         setMarkers(map, tugs)
-        {% if map.platforms %}
+        {% if map.docks %}
         setPlatforms(map, platforms)
         setDocks(map, docks)
         {% endif %}
@@ -187,7 +187,7 @@
         }
         var mc = new MarkerClusterer(map, markers, mcOptions)
         {% endif %}
-        {% if map.platforms %}
+        {% if map.docks %}
         for (var p in points) {
             var circleOptions = {
               strokeColor: '#FF0000',
@@ -269,7 +269,7 @@
             })
        }
     }
-    {% if map.platforms %}
+    {% if map.docks %}
     function setPlatforms(map, platforms){
        for (var p in platforms){
             var marker = new google.maps.Marker({

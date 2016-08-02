@@ -176,103 +176,78 @@ p[data-color=red] {
   color: red;
 }
 
-.sidebar__card__description {
-  text-align: center;
+/*
+    Created on : 21/04/2015, 09:52:35 AM
+    Author     : Santiago Mendoza
+*/
+html {
+  height: 100%;
 }
 
-.last-report {
-  text-align: center;
+body {
+  height: 100%;
+  padding-top: 50px;
 }
 
-.last-report--red {
-  color: red;
+#navbar {
+  background: -webkit-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet);
+  /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet);
+  /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet);
+  /* For Fx 3.6 to 15 */
+  background: linear-gradient(to right, white, white, white, #FFFF86, #FFFF86, #FFFF86, #FFFF86, #FFFF86, #FFFF86, #FFFF86);
+  /* Standard syntax (must be last) */
 }
 
-.last-report--green {
-  color: green;
+#navbar .navbar-nav > li > a {
+  color: #337ab7;
 }
 
-.alerts__panel {
-  margin: 10px 5px 5px 5px;
-  height: 75px;
+#master-navbar-brand {
+  padding: 0;
+}
+
+#navbar-logo {
+  height: 50px;
+}
+
+#master-main-content {
+  height: 100%;
+}
+
+#master-row-content {
+  height: 100%;
+}
+
+#master-sidebar {
+  height: 95%;
+  background-color: #FFFFFF;
   overflow: auto;
-}
-
-.alerts__table {
-  font-size: 1.1rem;
-}
-
-.sidebar__rmpanel {
-  margin: 10px 5px 5px 5px;
-}
-
-.rmpanel__title {
-  text-align: center;
-  font-size: 2.1rem;
-}
-
-.rmpanel__opstate {
-  text-align: center;
-  font-weight: bolder;
-  font-size: 2rem;
-}
-
-.rmpanel__date {
-  text-align: center;
-  font-weight: bold;
-}
-
-.rmpanel__table {
-  background-color: #D8D8D8;
-  width: 100%;
-}
-
-.dates {
-  background-color: #FFFF86;
   position: fixed;
-  top: 50px;
-  left: 40%;
-  width: 40%;
-  text-align: center;
-  border-radius: 0 0 10px 10px;
 }
 
-@media screen and (max-width: 650px) {
-  .dates {
-    width: 20px;
-  }
+.scrollable-menu {
+  height: auto;
+  width: 100%;
+  max-height: 250px;
+  overflow-x: hidden;
 }
 
-.dates__container {
-  margin: 5px 0 5px 0;
+#master-col-content {
+  height: 100%;
+  padding: 0;
 }
 
-@media screen and (max-width: 650px) {
-  .dates__container {
-    display: none;
-  }
+#fleet-html {
+  color: #272787;
 }
 
-.sidebar-right__labels__entities {
-  width: 200px;
+#title-vessel-panel {
+  overflow: hidden;
+  color: white;
 }
 
-.circle::before {
-  content: '';
-  border-radius: 50%;
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-}
-
-.circle--purple::before {
-  background-color: purple;
-}
-
-.circle--red::before {
-  background-color: red;
-}
-
-.circle--red::before {
-  background-color: green;
+#map-canvas {
+  height: 100%;
 }

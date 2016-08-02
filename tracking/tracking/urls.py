@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^country/(?P<fleet>[0-9]{1,4})/', views.country),
     url(r'^paths/', include('paths.urls')),
     url(r'^reports/', include('reports.urls')),
+    url(r'^alerts/', include('alerts.urls')),
     #url(r'^admin/', admin.site.urls),
 ]

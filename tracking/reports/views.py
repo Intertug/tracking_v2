@@ -57,7 +57,7 @@ def distance(request, vessel, fleet):
         }
         vesselsNames.append(var)
     visualConfig = getJSON("0", visualConf)
-    vars = {"fleet": fleet, "data": data, "names": vesselsNames, "visual": visualConfig, "vessel": vessel, "dates": dates}
+    vars = {"fleetId": fleet, "data": data, "names": vesselsNames, "visual": visualConfig, "vessel": vessel, "dates": dates}
     return render(request, "distanceReport.html", vars)
 
 def createDistance(coordinates, date):
@@ -138,7 +138,7 @@ def consumption(request, vessel, fleet):
             bow = True
             break 
     vars = {"names": vesselsNames, "visual": visualConfig, "consumption": consumption, "vessel": vessel, 
-            "fleet": fleet, "bow": bow, "dates": dates}
+            "fleetId": fleet, "bow": bow, "dates": dates}
     return render(request, "fuelReport.html", vars)
 
 def fuelUsage(vi, dateOne, dateTwo):

@@ -36,9 +36,10 @@
 <script src="{% static 'js/focusInput.js' %}"></script>
 {% endblock %}
 
-{% block sidebar %}
+{% block sidebarDistance %}
 <section class="sidebar">
-    <a href="/country/{{fleet}}">Atrás Flota</a>
+    <a href="/country/{{fleetId}}">Atrás Flota</a>
+    <a href="/paths/{{vessel}}">Atrás Recorrido</a>
     <div class="sidebar__card">
         {% for name in names %}
             {% if name.id == vessel %}

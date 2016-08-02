@@ -1,7 +1,4 @@
 from django.shortcuts import render
-import urllib
-import xml.etree.ElementTree as ET
-import json
 from settings import (VESSEL_CINFIGURATION_URL as vsConf, 
                       VESSELS_POSITION_URL as vsPos, 
                       VISUAL_CONFIGURATION_URL as visualConf,

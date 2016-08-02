@@ -70,5 +70,5 @@ def paths(request, vessel):
     mapConfig = getJSON(str(vesselConfig["fleetId"]), mapConf)
     alarms_log = getJSON(vessel, alLog)
     vars = {"path": gpsData, "visual": visualConfig, "map": mapConfig, "vessel": vesselConfig, 
-            "alarms": alarms_log, "dates": dates, "value": daqValue}
+            "alarms": alarms_log, "dates": dates, "value": daqValue, "fleetId": vesselConfig["fleetId"]}
     return render(request, "paths.html", vars)

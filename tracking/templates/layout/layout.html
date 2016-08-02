@@ -41,7 +41,7 @@
                             {% endfor %}
                         </ul>
                     </li>
-                    <li role="presentation"><a href="{{visual.linksmenu.1.value}}">{{visual.linksmenu.1.label}}</a></li>
+                    <li role="presentation"><a href="/alerts/{{fleetId}}">{{visual.linksmenu.1.label}}</a></li>
                 </ul>
                 {% block reports %}{% endblock %}
                 <ul id="navbar__{{visual.linksmenu.2.position}}" class="nav navbar-nav navbar-{{visual.linksmenu.2.position}} navbar__{{visual.linksmenu.2.position}}">
@@ -61,6 +61,7 @@
         </div>
     </nav>
 
+    {% if vessel %}
     <section class="sidebar">
         {% if not path %}
         <h3 class="sidebar__card__title">{{fleet}}</h3>
@@ -73,21 +74,19 @@
             </div>
         </div>
         {% endif %}
-        {% block sidebar %}{% endblock %}
+        {% block sidebarPaths %}{% endblock %}
+        {% block sidebarCountry %}{% endblock %}
+        {% block sidebarFuelReport %}{% endblock %}
+        {% block sidebarDistance %}{% endblock %}
     </section>
-
-    {% if not consumption %}
-        {% block mapscript %}{% endblock %}
-        {% if data%}
-            {% block mainDistance %}{% endblock %}
-        {% endif %}
-    {% else %}
-        {% block main %}{% endblock %}
     {% endif %}
 
-    {% if path %}
-        {% block search %}{% endblock %}
-    {% endif %}
+    {% block mapscriptPaths %}{% endblock %}
+    {% block mapscriptCountry %}{% endblock %}
+    {% block mainDistance %}{% endblock %}
+    {% block mainFuelReport %}{% endblock %}
+    {% block mainAlerts %}{% endblock %}
+    {% block search %}{% endblock %}
 
     {% block js %}{% endblock %}
 </body>
