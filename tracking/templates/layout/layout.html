@@ -41,7 +41,7 @@
                             {% endfor %}
                         </ul>
                     </li>
-                    <li role="presentation"><a href="/alerts/{{fleetId}}">{{visual.linksmenu.1.label}}</a></li>
+                    {% block conection %}{% endblock %}
                 </ul>
                 {% block reports %}{% endblock %}
                 <ul id="navbar__{{visual.linksmenu.2.position}}" class="nav navbar-nav navbar-{{visual.linksmenu.2.position}} navbar__{{visual.linksmenu.2.position}}">

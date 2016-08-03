@@ -12,6 +12,9 @@
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBEuaoh_rW9edjj3Ona1XpY2yOk090mJ5o&amp;sensor=true"></script>
 <script src="{% static 'js/markerclusterer.min.js' %}"></script>
 {% endblock %}
+{% block conection %}
+<li role="presentation"><a href="/alerts/{{fleetId}}">Estados de Conexión</a></li>
+{% endblock %}
 
 {% block sidebarCountry %}
 <div id="rms-dropdown" class="sidebar__rm-dropdown">
@@ -102,7 +105,7 @@
     var markers = []
     var tugs = [
         {% for vs in vessels %}
-            ["{{vs.vesselname}}", {{vs.lat}}, {{vs.long}}, 4,"<h6>{{vs.vesselname}}</h6> <b>Velocidad</b>: {{vs.speed}} Nudos<br/> <b>Fecha</b>: {{vs.gpsdate}} <br/><br/>"],
+            ["{{vs.vesselname}}", {{vs.lat}}, {{vs.long}}, 5,"<h6>{{vs.vesselname}}</h6> <b>Velocidad</b>: {{vs.speed}} Nudos<br/> <b>Fecha</b>: {{vs.gpsdate}} <br/><br/>"],
         {% endfor %}
     ]
     {% if map.docks %}
@@ -198,7 +201,8 @@
               map: map,
               center: points[p].center,
               radius: points[p].radius,
-              html: points[p].html
+              html: points[p].html,
+              zIndex: 1
             }
             var circle =  new google.maps.Circle(circleOptions)
             var infoWindowTemp = new google.maps.InfoWindow({
@@ -223,6 +227,7 @@
                 fillColor: '#FF0000',
                 fillOpacity: 0.35,
                 html: moorings[i]["html"],
+                zIndex: 1
             })
             var infoWindowTemp = new google.maps.InfoWindow({
                 size: new google.maps.Size(150,50)
@@ -251,7 +256,8 @@
                 icon: "{% static '' %}img/{{vessels.0.icon}}",
                 draggable: false,
                 title: tugs[0],
-                html: tugs[4]
+                html: tugs[4],
+                zIndex: 5
             })
             markers.push(marker)
             google.maps.event.addListener(marker, "mouseover", function () {
@@ -278,7 +284,7 @@
                 icon: platforms[p].icon,
                 draggable: false,
                 title: platforms[p].name,
-                zIndex: 1,
+                zIndex: 2,
                 html: "<h6>" + platforms[p].name + "</h6>"
             })
             google.maps.event.addListener(marker, "mouseover", function () {
@@ -299,7 +305,7 @@
                 icon: docks[d].icon,
                 draggable: false,
                 title: docks[d].name,
-                zIndex: 1,
+                zIndex: 2,
                 html: "<h6>" + docks[d].name + "</h6>"
             })
             google.maps.event.addListener(marker, "mouseover", function () {

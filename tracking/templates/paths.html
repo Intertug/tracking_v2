@@ -137,7 +137,7 @@
     })
     var dots = [
         {% for p in path.coordinates %}
-            ["{{vessel.labels.lblVesselName|upper}}", {{p.position.lat}}, {{p.position.lon}}, 4,
+            ["{{vessel.labels.lblVesselName|upper}}", {{p.position.lat}}, {{p.position.lon}}, 1,
             "<h6>{{vessel.labels.lblVesselName|upper}}</h6> <b>Velocidad</b>: {{p.speed}} Nudos<br/> <b>Fecha</b>: {{p.datetime}} <br/><br/>",
             "{{p.id}}", "{{p.speed}}", "{{p.datetime}}"],
         {% endfor %}
@@ -201,7 +201,8 @@
     var arrow = {
         path: google.maps.SymbolPath.FORWARD_OPEN_ARROW,
         scale: 1.05,
-        strokeColor: 'green'
+        strokeColor: 'green', 
+        strokeOpacity: 0.6
     }
 
     function inicial(){
@@ -240,8 +241,9 @@
             }],
             geodesic: true,
             strokeColor: 'green',
-            strokeOpacity: 1.0,
-            strokeWeight: 2
+            strokeOpacity: 0.6,
+            strokeWeight: 2,
+            zIndex: 1
         })
         var vessel = new google.maps.Marker({
             {% with lastPos=path.coordinates|last %}
@@ -251,7 +253,7 @@
             draggable: false,
             icon: "{% static 'img/ship.png' %}",
             title: "{{vessel.labels.lblVesselname}}",
-            zIndex: 1
+            zIndex: 5
         })
 
         setMarkers(map, dots)
@@ -277,7 +279,8 @@
               map: map,
               center: points[p].center,
               radius: points[p].radius,
-              html: points[p].html
+              html: points[p].html,
+              zIndex: 1
             }
             var circle =  new google.maps.Circle(circleOptions)
             var infoWindowTemp = new google.maps.InfoWindow({
@@ -302,6 +305,7 @@
                 fillColor: '#FF0000',
                 fillOpacity: 0.35,
                 html: moorings[i]["html"],
+                zIndex: 1
             })
             var infoWindowTemp = new google.maps.InfoWindow({
                 size: new google.maps.Size(150,50)
@@ -330,7 +334,8 @@
                 icon: {
                     path: google.maps.SymbolPath.CIRCLE,
                     scale: 2,
-                    strokeColor: alert[i]
+                    strokeColor: alert[i],
+                    strokeOpacity: 0.9
                 },
                 draggable: false,
                 title: point[0],
