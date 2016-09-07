@@ -16,7 +16,7 @@ def getXML(si, gd, urlString):
     try:
         openUrl = urllib.urlopen(url)
     except:
-        print "Error calling getVesselsPosition"
+        print "Error calling XML service"
     data = openUrl.read()
     try:
         tree = ET.fromstring(data) #the Json is inside an XML, first node 
@@ -40,7 +40,8 @@ def getJSON(id, urlString):
     try:
         openUrl = urllib.urlopen(url)
     except:
-           print "Error calling vesselConfig" 
+           print "Error calling JSON service" 
     data = openUrl.read()
     dataJson = json.loads(data)
     return dataJson
+

@@ -150,3 +150,5 @@ MAP_CONFIGURATION_URL = "http://nautilus.intertug.com:8080/api/mapconfiguration/
 DAQ_VALUE_URL = "http://190.242.119.122:82/sioservices/daqonboardservice.asmx/GetDaqValue?"
 VESSEL_GPS_DATA_URL = "http://190.242.119.122:82/sioservices/daqonboardservice.asmx/GetVesselGpsData?"
 ALARMS_LOG_URL = "http://nautilus.intertug.com:8080/api/alarmsLog/"
+CREATE_SESSION_URL = "http://190.242.119.122:82/sioservices/SioGeneralService.asmx/CreateSession?"
+APPLICATION_ID = "24649159-AF50-4C6F-9EBE-474F4E7BEF57"

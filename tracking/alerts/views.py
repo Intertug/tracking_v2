@@ -3,8 +3,8 @@ import pypyodbc as sql
 from tracking.webServicesCalls import getXML, getJSON
 from tracking.settings import (VESSELS_POSITION_URL as vsPos,
                                VISUAL_CONFIGURATION_URL as visualConf, 
-                               VESSEL_GPS_DATA_URL as vsGpsData)
-from tracking.settings import CONN_STRING as dbString
+                               VESSEL_GPS_DATA_URL as vsGpsData,
+                               CONN_STRING as dbString)
 import datetime
 
 def alerts(request, fleet):

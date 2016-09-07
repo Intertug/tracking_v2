@@ -1,7 +1,4 @@
 from django.shortcuts import render
-import urllib
-import xml.etree.ElementTree as ET
-import json
 import datetime
 from tracking.webServicesCalls import getXML, getJSON
 from tracking.settings import (DAQ_VALUE_URL as daqVal,

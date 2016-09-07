@@ -2,9 +2,10 @@ from django.shortcuts import render
 from settings import (VESSEL_CINFIGURATION_URL as vsConf, 
                       VESSELS_POSITION_URL as vsPos, 
                       VISUAL_CONFIGURATION_URL as visualConf,
-                      MAP_CONFIGURATION_URL as mapConf)
-
+                      MAP_CONFIGURATION_URL as mapConf, 
+                      CREATE_SESSION_URL as createSession)
 from webServicesCalls import getXML, getJSON
+from django.shortcuts import redirect
 
 def country(request, fleet):
     '''
@@ -37,4 +38,8 @@ def country(request, fleet):
     return render(request, "country.html", vars)
 
 def index(request):
-    return render(request, "index.html")
+    if request.GET.get('sessionID'):
+        return redirect('country/1')
+    else:
+        return redirect('country/0')
+        #return render(request, "index.html")

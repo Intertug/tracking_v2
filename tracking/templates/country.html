@@ -105,7 +105,7 @@
     var markers = []
     var tugs = [
         {% for vs in vessels %}
-            ["{{vs.vesselname}}", {{vs.lat}}, {{vs.long}}, 5,"<h6>{{vs.vesselname}}</h6> <b>Velocidad</b>: {{vs.speed}} Nudos<br/> <b>Fecha</b>: {{vs.gpsdate}} <br/><br/>"],
+            ["{{vs.vesselname}}", {{vs.lat}}, {{vs.long}}, 5,"<h6>{{vs.vesselname}}</h6> <b>Velocidad</b>: {{vs.speed}} Nudos<br/> <b>Fecha</b>: {{vs.gpsdate}} <br/><br/>", "{{vs.icon}}"],
         {% endfor %}
     ]
     {% if map.docks %}
@@ -253,7 +253,7 @@
             var marker = new google.maps.Marker({
                 position : tugsLatLon,
                 map: map,
-                icon: "{% static '' %}img/{{vessels.0.icon}}",
+                icon: "{% static '' %}img/"+tugs[5],
                 draggable: false,
                 title: tugs[0],
                 html: tugs[4],

@@ -210,7 +210,7 @@
         var center = new google.maps.LatLng({{lastPos.position.lat}}, {{lastPos.position.lon}})
         {% endwith %}
         var options = {
-            zoom: {{map.zoom}},
+            zoom: 13,
             center: center,
             mapTypeId: google.maps.MapTypeId.{{map.mapType}},
             mapTypeControl: true,

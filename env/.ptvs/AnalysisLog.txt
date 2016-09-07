@@ -10569,3 +10569,8 @@ C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\Micro
 2016-06-03T16:14:37: Saving group "C:\Users\Ruben Melo\Documents\Projects\tracking_v2\env\Lib\site-packages\tests"
 2016-06-03T16:14:37: End of group "C:\Users\Ruben Melo\Documents\Projects\tracking_v2\env\Lib\site-packages\tests"
 2016-06-03T16:14:40: Deleting 0 files
+
+2016-08-05T14:45:04: Start analysis
+2016-08-05T14:45:04: [WARNING] Library was set explicitly - skipping path detection
+2016-08-05T14:45:04: IncludeModulesFromModulePath = win32com
+2016-08-05T14:45:06: Deleting 24 files
