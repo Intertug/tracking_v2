@@ -20,7 +20,7 @@
 <div id="rms-dropdown" class="sidebar__rm-dropdown">
     <div class="dropdown">
         <button class="btn btn-default btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-            Remolcadores
+            Embarcaciones
             <span class="caret"></span>
         </button>
         <ul id="rm-list" class="dropdown-menu dropdown-menu-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -142,11 +142,11 @@
     var moorings = [
         {% for moor in map.moorings %}
         {
-            path: [new google.maps.LatLng({{moor.vertices.0.0}}, {{moor.vertices.0.1}}),
-                   new google.maps.LatLng({{moor.vertices.1.0}}, {{moor.vertices.1.1}}), 
-                   new google.maps.LatLng({{moor.vertices.2.0}}, {{moor.vertices.2.1}}), 
-                   new google.maps.LatLng({{moor.vertices.3.0}}, {{moor.vertices.3.1}}), 
-                  ],
+            path: [
+            {% for area in moor.vertices %}
+                   new google.maps.LatLng({{area.0}}, {{area.1}}),
+            {% endfor %}
+            ],
             html: "{{moor.name}}"
         },
         {% endfor %}

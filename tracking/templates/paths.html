@@ -176,11 +176,11 @@
     var moorings = [
         {% for moor in map.moorings %}
         {
-            path: [new google.maps.LatLng({{moor.vertices.0.0}}, {{moor.vertices.0.1}}),
-                   new google.maps.LatLng({{moor.vertices.1.0}}, {{moor.vertices.1.1}}),
-                   new google.maps.LatLng({{moor.vertices.2.0}}, {{moor.vertices.2.1}}),
-                   new google.maps.LatLng({{moor.vertices.3.0}}, {{moor.vertices.3.1}}),
-                  ],
+            path: [
+            {% for area in moor.vertices %}
+                   new google.maps.LatLng({{area.0}}, {{area.1}}),
+            {% endfor %}
+            ],
             html: "{{moor.name}}"
         },
         {% endfor %}
@@ -251,7 +251,7 @@
             {% endwith %}
             map: map,
             draggable: false,
-            icon: "{% static 'img/ship.png' %}",
+            icon: "{% static '' %}img/"+"{{vessel.icon}}",
             title: "{{vessel.labels.lblVesselname}}",
             zIndex: 5
         })
