@@ -35,6 +35,16 @@
     <Compile Include="tracking\alerts\views.py" />
     <Compile Include="tracking\alerts\__init__.py" />
     <Compile Include="tracking\manage.py" />
+    <Compile Include="tracking\maneuver\admin.py" />
+    <Compile Include="tracking\maneuver\apps.py" />
+    <Compile Include="tracking\maneuver\migrations\__init__.py" />
+    <Compile Include="tracking\maneuver\models.py" />
+    <Compile Include="tracking\maneuver\tests.py" />
+    <Compile Include="tracking\maneuver\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tracking\maneuver\views.py" />
+    <Compile Include="tracking\maneuver\__init__.py" />
     <Compile Include="tracking\paths\admin.py" />
     <Compile Include="tracking\paths\apps.py" />
     <Compile Include="tracking\paths\migrations\__init__.py" />
@@ -70,6 +80,8 @@
     <Folder Include="tracking" />
     <Folder Include="tracking\alerts\" />
     <Folder Include="tracking\alerts\migrations\" />
+    <Folder Include="tracking\maneuver\" />
+    <Folder Include="tracking\maneuver\migrations\" />
     <Folder Include="tracking\paths\" />
     <Folder Include="tracking\paths\migrations\" />
     <Folder Include="tracking\reports\" />
@@ -178,6 +190,9 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="tracking\templates\layout\layout.html">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="tracking\templates\maneuver.html">
       <SubType>Code</SubType>
     </Content>
     <Content Include="tracking\templates\paths.html">

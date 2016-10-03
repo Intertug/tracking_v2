@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'paths',
     'reports',
     'alerts',
+    'maneuver',
 ]
 
 MIDDLEWARE_CLASSES = [

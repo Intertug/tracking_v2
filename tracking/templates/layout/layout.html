@@ -42,6 +42,7 @@
                         </ul>
                     </li>
                     {% block conection %}{% endblock %}
+                    {% block maneuver %}{% endblock %}
                 </ul>
                 {% block reports %}{% endblock %}
                 <ul id="navbar__{{visual.linksmenu.2.position}}" class="nav navbar-nav navbar-{{visual.linksmenu.2.position}} navbar__{{visual.linksmenu.2.position}}">
@@ -69,19 +70,19 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">×</span>
             </button>
-            <div id="infotip-html">
-                <p>Despliegue la lista y haga clic en cualquier remolcador para ver su información en este panel</p>
-            </div>
+            {% block infotip%}{% endblock %}
         </div>
         {% endif %}
         {% block sidebarPaths %}{% endblock %}
         {% block sidebarCountry %}{% endblock %}
         {% block sidebarFuelReport %}{% endblock %}
         {% block sidebarDistance %}{% endblock %}
+        {% block sidebarManeuver %}{% endblock %}
     </section>
     {% endif %}
 
     {% block mapscriptPaths %}{% endblock %}
+    {% block mapscriptManeuver %}{% endblock %}
     {% block mapscriptCountry %}{% endblock %}
     {% block mainDistance %}{% endblock %}
     {% block mainFuelReport %}{% endblock %}

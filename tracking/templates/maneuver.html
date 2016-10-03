@@ -1,7 +1,7 @@
 {% extends 'layout/layout.html' %}
 {% load staticfiles %}
 
-{%block title%}Posición {{fleet}}{% endblock %}
+{%block title%}Maniobras {{fleet}}{% endblock %}
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/country.css' %}">
 {% endblock %}
@@ -13,99 +13,42 @@
 <script src="{% static 'js/markerclusterer.min.js' %}"></script>
 {% endblock %}
 
+{% block infotip %}
+<div id="infotip-html">
+    <p>Escoja una o varias Embarcaciones con la fecha-hora deseada de la lista para crear la maniobra</p>
+</div>
+{% endblock %}
+
 {% block conection %}
 <li role="presentation"><a href="/alerts/{{fleetId}}">Estados de Conexión</a></li>
 {% endblock %}
 
-{% block infotip %}
-<div id="infotip-html">
-    <p>Despliegue la lista y haga clic en cualquier embarcación para ver su información en este panel</p>
-</div>
+{% block sidebarManeuver %}
+<section class="sidebar">
+    <a href="/country/{{fleetId}}">Atrás Flota</a>
+    <form class="form sidebar__form" method="POST">
+        {% csrf_token %}
+        {% for vessel in vessels %}
+        <div class="form__group">
+            <input type="checkbox" id="{{vessel.vesselname|slugify}}" name="{{vessel.vesselname|slugify}}" value="{{vessel.vesselname|slugify}}" >
+            <label for="{{vessel.vesselname|slugify}}">{{vessel.vesselname}}</label>
+        </div>
+        {% endfor %}
+        <br/>
+        <div class="form__group">
+            <label for="dateone" class="control-label form__label">Fecha inicio: </label>
+            <input required type="text" id="dateone" name="dateone" class="form-control form__date form__input" placeholder="{{dates.init}}" value="{{dates.init}}" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+        </div>
+        <div class="form__group">
+            <label for="datetwo" class="control-label form__label">Fecha final: </label>
+            <input required type="text" id="datetwo" name="datetwo" class="form-control form__date form__input" placeholder="{{dates.final}}" value="{{dates.final}}" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+        </div>
+        <input type="submit" class="btn form-control btn-success form__submit" value="Generar">
+    </form>
+</section>
 {% endblock %}
 
-{% block maneuver %}
-<li role="presentation"><a href="/maneuver/{{fleetId}}">Maniobras</a></li>
-{% endblock %}
-
-{% block sidebarCountry %}
-<div id="rms-dropdown" class="sidebar__rm-dropdown">
-    <div class="dropdown">
-        <button class="btn btn-default btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-            Embarcaciones
-            <span class="caret"></span>
-        </button>
-        <ul id="rm-list" class="dropdown-menu dropdown-menu-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
-            {% for vessel in vessels%}
-            <li role="presentation"> <a id="{{vessel.vesselname|slugify}}" role="menuitem" tabindex="-1" href="#">{{vessel.id}} - {{vessel.vesselname}}</a> </li>
-            {% endfor %}
-        </ul>
-    </div>
-</div>
-<div id="handlebar-html" class="sidebar__rm-panel">
-    {% for vs in vessels %}
-    <div class="panel panel-primary hidden" id="table-{{vs.vesselname|slugify}}">
-        <div class="panel-heading">
-            <a href="#" style="color:white;" class="pull-right">
-                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-                <span class="sr-only">Refresh</span>
-            </a>
-            <h3 class="panel-title">
-                {{vs.vesselname}}
-                {% for v in vessel %}
-                    {% if v.vesselName|upper == vs.vesselname %}
-                    <small style="color:white">{{v.labels.lblIMO}}: {{v.IMO}}</small>
-                    {% endif %}
-                {% endfor %}
-            </h3>
-        </div>
-        <div class="panel-body">
-            <!-- Table with vessel info -->
-            <div class="table-responsive">
-                <table class="table table-striped table-condensed">
-                    <tbody>
-                        <tr>
-                            <td>Velocidad</td>
-                            <td>{{vs.speed}}</td>
-                            <td>{{vs.gpsdate}}</td>
-                        </tr>
-                        {% if vs.rpm > -1 %}
-                        <tr>
-                            <td>RPM</td>
-                            <td>{{vs.rpm}}</td>
-                            <td>{{vs.rpmdate}}</td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div style="text-align: center" class="panel-footer">
-            <div class="btn-group-sm" role="group" aria-label="...">
-                <a href="/paths/{{vs.id}}" type="button" class="btn btn-primary">Recorrido</a>
-                <!-- <button id="recorrido" vesselidselected="0" class="btn btn-primary">Recorrido</button>-->
-                <div class="btn-group btn-group-sm" role="group">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        Reportes
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li>
-                            <a href="/reports/fuel/{{fleetId}}/{{vs.id}}">Consumo Combustible</a>
-                        </li>
-                        <li>
-                            <a href="/reports/distance/{{fleetId}}/{{vs.id}}">Distancias Recorridas</a>
-                        </li>
-                    </ul>
-                </div>
-                <a href="#" type="button" class="btn btn-primary">Control</a>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-</div>
-{% endblock %}
-
-{% block mapscriptCountry %}
+{% block mapscriptManeuver %}
 <section class="main">
     <div id="map-canvas" class="main__map"></div>
 </section>
@@ -277,12 +220,6 @@
             })
             google.maps.event.addListener(marker, "mouseout", function(){
                 infoWindow.close()
-            })
-            google.maps.event.addListener(marker, "click", function () {
-                $(".panel-primary").addClass("hidden");
-                id = String(this.title).toLowerCase()
-                link = "#table-" + slugify(id)
-                $(link).toggleClass("hidden");
             })
        }
     }

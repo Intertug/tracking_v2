@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'^paths/', include('paths.urls')),
     url(r'^reports/', include('reports.urls')),
     url(r'^alerts/', include('alerts.urls')),
+    url(r'^maneuver/', include('maneuver.urls')),
     #url(r'^admin/', admin.site.urls),
 ]
