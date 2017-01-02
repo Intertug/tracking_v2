@@ -43,6 +43,5 @@ Response
 compat
 __version__
 TooManyRedirects
-pyopenssl
 ConnectionError
 RequestException

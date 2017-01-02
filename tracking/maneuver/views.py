@@ -17,61 +17,53 @@ def maneuver(request, fleet):
         returns a render page with the variables to use in the HTML
         '''
         sessionId = ""
-        getData = "vesselid=" + vessel
-        #If in the request comes a POST with a init and final tags, take the content and depending
-        #on the content or not, bring a diferent range of dataset
-        if request.POST.get("init") != None and request.POST.get("final") != None:
-            if request.POST.get("init") != "" and request.POST.get("final") != "":#if there are two dates, take both
-                #create a variable dict to render this dates on the input form
-                dates = {
-                    "init": request.POST.get("init"),
-                    "final": request.POST.get("final")
-                }
-                getData += "|INIDATE=" + request.POST.get("init")
-                getData += "|ENDDATE=" + request.POST.get("final")
-            elif request.POST.get("init") == "" and request.POST.get("final") != "":#if there is only final date, search that one
-                dates = {
-                    "init": request.POST.get("final"),
-                    "final": request.POST.get("final")
-                }
-                getData += "|INIDATE=" + request.POST.get("final")
-                getData += "|ENDDATE=" + request.POST.get("final")
-            elif request.POST.get("init") != "" and request.POST.get("final") == "":#if there is just a init date, serach that one
-                dates = {
-                    "init": request.POST.get("init"),
-                    "final": request.POST.get("init")
-                }
-                getData += "|INIDATE=" + request.POST.get("init")
-                getData += "|ENDDATE=" + request.POST.get("init")
-            else:
-                pass
-        else:
-            dates = {
-                "init": datetime.datetime.today().isoformat().split("T")[0],
-                "final": datetime.datetime.today().isoformat().split("T")[0]
-            }
-        gpsData = getXML(sessionId, getData, vsGpsData)
-        getData = "vesselid=" + vessel
-        try:
-            dateId = gpsData["coordinates"][-1]["id"]
-        except:
-            dateId = dates["init"]
-        if len(str(dateId)) > 10:
-            dateStr = str(dateId)
-            dates["value"] = "{}-{}-{} {}:{}:{}".format(dateStr[:4], dateStr[4:6], dateStr[6:8], dateStr[8:10], dateStr[10:12], dateStr[12:14])
-        else:
-            date1 = datetime.datetime.today().isoformat().split("T")[0]
-            date2 = datetime.datetime.today().isoformat().split("T")[1]
-            dates["value"] = "{} {}".format(date1, date2[:8])
-        getData += "|datestring=" + str(dateId)
-        daqValue = getXML(sessionId, getData, daqVal)
-        visualConfig = getJSON("0", visualConf)
-        vesselConfig = getJSON(vessel, vsConf)
-        mapConfig = getJSON(str(vesselConfig["fleetId"]), mapConf)
-        alarms_log = getJSON(vessel, alLog)
-        vars = {"path": gpsData, "visual": visualConfig, "map": mapConfig, "vessel": vesselConfig, 
-                "alarms": alarms_log, "dates": dates, "value": daqValue, "fleetId": vesselConfig["fleetId"]}
+        getData = "fleetId=" + fleet
+        vesselsPosition = getXML(sessionId, getData, vsPos)
+        
+        vesselsIds = []
+        #extracts all the vesselsId's
+        for vessel in vesselsPosition:
+            vesselsIds.append(vessel["id"])
+        vesselConfig = []
+        #with the vesselsId's creates all the configurations for that ids
+        for vessel in vesselsIds:
+            vesselConfig.append(getJSON(vessel, vsConf))
 
+        vessels = request.POST.getlist("vessels")
+        dateOne = request.POST.get("dateone")
+        dateTwo = request.POST.get("datetwo")
+        hourOne = request.POST.get("hourone")
+        
+        if int(hourOne) < 10 and len(hourOne) < 2:
+            hourOne = "0" + hourOne
+        hourTwo = request.POST.get("hourtwo")
+
+        if int(hourTwo) < 10 and len(hourTwo) < 2:
+            hourTwo = "0" + hourTwo
+
+        vesselsData = []
+        mapConfig = getJSON(str(fleet), mapConf)
+        visualConfig = getJSON("0", visualConf)
+
+        for vessel in vessels:
+            sessionId = ""
+            getData = "vesselid=" + vessel
+            #If in the request comes a POST with a init and final tags, take the content and depending
+            #on the content or not, bring a diferent range of dataset
+            getData += "|INIDATE=" + str(dateOne) + " " + str(hourOne) + ":00:00"
+            getData += "|ENDDATE=" + str(dateTwo) + " " + str(hourTwo) + ":59:59"           
+            gpsData = getXML(sessionId, getData, vsGpsData)
+            daqValue = getXML(sessionId, getData, daqVal)
+            vesselConfig = getJSON(vessel, vsConf)
+            data = { "vesselName": vesselConfig["vesselName"],
+                     "path": gpsData,
+                     "values": daqValue,
+                    }
+            vesselsData.append(data)
+        vars = {"vessels": vesselsPosition, "data": vesselsData, "visual": visualConfig, "map": mapConfig, "fleetId": fleet,
+                "vessel": vesselConfig}
+
+#########################
     else:
         '''
         Controller that recieve a request from the browser

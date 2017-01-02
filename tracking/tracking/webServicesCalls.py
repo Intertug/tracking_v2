@@ -40,7 +40,7 @@ def getJSON(id, urlString):
     try:
         openUrl = urllib.urlopen(url)
     except:
-           print "Error calling JSON service" 
+        print "Error calling JSON service" 
     data = openUrl.read()
     dataJson = json.loads(data)
     return dataJson

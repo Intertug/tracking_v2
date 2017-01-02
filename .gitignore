@@ -244,5 +244,5 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
-tracking/tracking/settings.py
+/tracking/tracking/settings.py
 *.pyc

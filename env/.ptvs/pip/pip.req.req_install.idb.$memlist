@@ -5,12 +5,12 @@ UninstallPathSet
 read_text_file
 InstallRequirement
 logger
-RemovedInPip9Warning
 rmtree
-WINDOWS
+get_stdlib
 UninstallationError
 url_to_path
 change_root
+_safe_extras
 ask_path_exists
 dist_in_usersite
 ensure_dir
@@ -21,7 +21,7 @@ operators
 bin_user
 indent_log
 display_path
-running_under_virtualenv
+InvalidRequirement
 move_wheel_files
 tempfile
 Hashes
@@ -31,6 +31,7 @@ bin_py
 call_subprocess
 canonicalize_name
 zipfile
+SETUPTOOLS_SHIM
 Requirement
 re
 RemovedInPip10Warning
@@ -41,7 +42,7 @@ path_to_url
 warnings
 open_spinner
 backup_dir
-get_stdlib
+WINDOWS
 InstallationError
 specifiers
 sys
@@ -55,7 +56,7 @@ parse_editable
 os
 Marker
 dist_in_site_packages
-InvalidRequirement
+running_under_virtualenv
 sysconfig
 Wheel
 absolute_import
@@ -64,6 +65,5 @@ _strip_postfix
 normalize_path
 get_installed_version
 PIP_DELETE_MARKER_FILENAME
-_build_req_from_url
 egg_link_path
-SETUPTOOLS_SHIM
+parse_version
