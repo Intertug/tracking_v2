@@ -246,3 +246,4 @@ ModelManifest.xml
 
 /tracking/tracking/settings.py
 *.pyc
+env/

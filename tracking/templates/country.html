@@ -13,18 +13,10 @@
 <script src="{% static 'js/markerclusterer.min.js' %}"></script>
 {% endblock %}
 
-{% block conection %}
-<li role="presentation"><a href="/alerts/{{fleetId}}">Estados de Conexión</a></li>
-{% endblock %}
-
 {% block infotip %}
 <div id="infotip-html">
     <p>Despliegue la lista y haga clic en cualquier embarcación para ver su información en este panel</p>
 </div>
-{% endblock %}
-
-{% block maneuver %}
-<li role="presentation"><a href="/maneuver/{{fleetId}}">Maniobras</a></li>
 {% endblock %}
 
 {% block sidebarCountry %}
@@ -52,9 +44,9 @@
             <h3 class="panel-title">
                 {{vs.vesselname}}
                 {% for v in vessel %}
-                    {% if v.vesselName|upper == vs.vesselname %}
-                    <small style="color:white">{{v.labels.lblIMO}}: {{v.IMO}}</small>
-                    {% endif %}
+                {% if v.vesselname|upper == vs.vesselname|upper %}
+                <small style="color:white">IMO: {{v.IMO}}</small>
+                {% endif %}
                 {% endfor %}
             </h3>
         </div>
@@ -119,49 +111,48 @@
             ["{{vs.vesselname}}", {{vs.lat}}, {{vs.long}}, 5,"<h6>{{vs.vesselname}}</h6> <b>Velocidad</b>: {{vs.speed}} Nudos<br/> <b>Fecha</b>: {{vs.gpsdate}} <br/><br/>", "{{vs.icon}}"],
         {% endfor %}
     ]
-    {% if map.docks %}
-    var platforms = [
-        {% for p in map.platforms %}
-        {
-            icon: "{% static '' %}img/{{p.icon}}",
-            center: new google.maps.LatLng({{p.center.0}}, {{p.center.1}}),
-            name: "{{p.name}}"
-        },
-        {% endfor %}
-    ]
 
-    var docks = [
-        {% for d in map.docks %}
-        {
-            icon: "{% static '' %}img/{{d.icon}}",
-            center: new google.maps.LatLng({{d.center.0}}, {{d.center.1}}),
-            name: "{{d.name}}"
-        },
+    {% if map.mapMarkers %}
+        var icons = [
+        {% for type in map.mapMarkers %}
+            {% if type.type == "icon" %}
+            {
+                icon: "{% static '' %}img/{{type.image}}",
+                center: new google.maps.LatLng({{type.center.0}}, {{type.center.1}}),
+                name: "{{type.name}}",
+                html: "{{type.markerdata}}"
+            },
+            {% endif %}
         {% endfor %}
-    ]
+        ]
 
-    var points = [
-        {% for circles in map.anchorages %}
-        {
-            center: new google.maps.LatLng({{circles.center.0}}, {{circles.center.1}}),
-            radius: {{circles.radius}},
-            html: "{{circles.name}}"
-        },
+        var polygons = [
+        {% for type in map.mapMarkers %}
+            {% if type.type == "polygon" %}
+            {
+                path:[
+                {% for vertice in type.vertices %}
+                   new google.maps.LatLng({{vertice.0}}, {{vertice.1}}),
+                {% endfor %}
+                ],
+                html: "{{type.name}}"
+            },
+            {% endif %}
         {% endfor %}
-    ]
+        ]
 
-    var moorings = [
-        {% for moor in map.moorings %}
-        {
-            path: [
-            {% for area in moor.vertices %}
-                   new google.maps.LatLng({{area.0}}, {{area.1}}),
-            {% endfor %}
-            ],
-            html: "{{moor.name}}"
-        },
+        var circles = [
+        {% for type in map.mapMarkers %}
+            {% if type.type == "circle" %}
+            {
+                center: new google.maps.LatLng({{type.center.0}}, {{type.center.1}}),
+                name: "{{type.name}}",
+                radius: {{type.radius}},
+                html: "{{type.marketdata}}"
+            },
+            {% endif %}
         {% endfor %}
-    ]
+        ]
     {% endif %}
 
     var map = null
@@ -172,7 +163,7 @@
             zoom: {{map.zoom}},
             center: center,
             mapTypeId: google.maps.MapTypeId.{{map.mapType}},
-            mapTypeControl: true,
+            mapTypeControl: {{map.mapTypeControl}},
             streetViewControl: false,
             scaleControl: true,
             mapTypeControlOptions: {
@@ -190,19 +181,19 @@
         }
         map = new google.maps.Map(document.getElementById("map-canvas"), options)
         setMarkers(map, tugs)
-        {% if map.docks %}
-        setPlatforms(map, platforms)
-        setDocks(map, docks)
+        {% if map.mapMarkers %}
+        setIcons(map, icons)
         {% endif %}
-        {% if map.cluster > 0 %}
+        {% if map.cluster %}
         var mcOptions = {
             gridSize: {{map.cluster}},
             maxZoom: 12
         }
         var mc = new MarkerClusterer(map, markers, mcOptions)
         {% endif %}
-        {% if map.docks %}
-        for (var p in points) {
+
+        {% if map.mapMarkers %}
+        for (var p in circles) {
             var circleOptions = {
               strokeColor: '#FF0000',
               strokeOpacity: 0.7,
@@ -210,9 +201,9 @@
               fillColor: '#FF0000',
               fillOpacity: 0.40,
               map: map,
-              center: points[p].center,
-              radius: points[p].radius,
-              html: points[p].html,
+              center: circles[p].center,
+              radius: circles[p].radius,
+              html: circles[p].name + "<br>" + circles[p].html,
               zIndex: 1
             }
             var circle =  new google.maps.Circle(circleOptions)
@@ -229,15 +220,15 @@
                 infoWindowTemp.open(map)
             })
         }
-        for (var i = 0; i < moorings.length; i++){
+        for (var i = 0; i < polygons.length; i++){
             mooringOpt = new google.maps.Polygon({
-                paths: moorings[i]["path"],
+                paths: polygons[i]["path"],
                 strokeColor: '#FF0000',
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
                 fillColor: '#FF0000',
                 fillOpacity: 0.35,
-                html: moorings[i]["html"],
+                html: polygons[i]["html"],
                 zIndex: 1
             })
             var infoWindowTemp = new google.maps.InfoWindow({
@@ -255,6 +246,7 @@
             mooringOpt.setMap(map)
         }
         {% endif %}
+
     }
 
     function setMarkers(map, vessels){
@@ -286,38 +278,18 @@
             })
        }
     }
-    {% if map.docks %}
-    function setPlatforms(map, platforms){
-       for (var p in platforms){
-            var marker = new google.maps.Marker({
-                position: platforms[p].center,
-                map: map,
-                icon: platforms[p].icon,
-                draggable: false,
-                title: platforms[p].name,
-                zIndex: 2,
-                html: "<h6>" + platforms[p].name + "</h6>"
-            })
-            google.maps.event.addListener(marker, "mouseover", function () {
-                infoWindow.setContent(this.html)
-                infoWindow.open(map, this)
-            })
-            google.maps.event.addListener(marker, "mouseout", function () {
-                infoWindow.close()
-            })
-       }
-    }
 
-    function setDocks(map, docks){
-       for (var d in docks){
+    {% if map.mapMarkers %}
+    function setIcons(map, icons){
+       for (var p in icons){
             var marker = new google.maps.Marker({
-                position: docks[d].center,
+                position: icons[p].center,
                 map: map,
-                icon: docks[d].icon,
+                icon: icons[p].icon,
                 draggable: false,
-                title: docks[d].name,
+                title: icons[p].name,
                 zIndex: 2,
-                html: "<h6>" + docks[d].name + "</h6>"
+                html: "<h6>" + icons[p].name + "</h6> <br>" + icons[p].html
             })
             google.maps.event.addListener(marker, "mouseover", function () {
                 infoWindow.setContent(this.html)
@@ -329,6 +301,7 @@
        }
     }
     {% endif %}
+
     google.maps.event.addDomListener(window, 'load', inicial)
 </script>
 {% endblock %}

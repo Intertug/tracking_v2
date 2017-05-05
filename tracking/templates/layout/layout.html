@@ -24,41 +24,43 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a id="master-navbar-brand" class="navbar-brand" href="/country/0">
-                    <img id="navbar-logo" class="navbar-logo" alt="Intertug" src="{% static '' %}img/{{visual.logo}}">
+                <a id="master-navbar-brand" class="navbar-brand" href="{{visual.homeUrl}}?SessionID={{session}}">
+                    <img id="navbar-logo" class="navbar-logo" alt="Intertug" src="{% static '' %}img/{{visual.userlogo}}.jpg">
                 </a>
             </div>
+            <!-- Menu -->
             <div class="collapse navbar-collapse navbar__collapsible" id="navbar-menu">
-                <ul id="navbar__{{visual.linksmenu.0.position}}" class="nav navbar-nav navbar__{{visual.linksmenu.0.position}}">
-                    <li class="dropdown navbar__{{visual.linksmenu.0.position}}__dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {{visual.linksmenu.0.label}}
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            {% for flota in visual.linksmenu.0.links %}
-                            <li role="presentation"><a href="/country/{{flota.value}}">{{flota.label}}</a></li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    {% block conection %}{% endblock %}
-                    {% block maneuver %}{% endblock %}
-                </ul>
-                {% block reports %}{% endblock %}
-                <ul id="navbar__{{visual.linksmenu.2.position}}" class="nav navbar-nav navbar-{{visual.linksmenu.2.position}} navbar__{{visual.linksmenu.2.position}}">
-                    <li class="dropdown navbar__{{visual.linksmenu.2.position}}__dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {{visual.linksmenu.2.label}}
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            {% for link in visual.linksmenu.2.links %}
-                            <li role="presentation"><a href="{{link.value}}">{{link.label}}</a></li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                </ul>
+                {% for item in visual.Menu.MenuItem %}
+                    {% if item.MenuItem %} 
+                    <ul id="navbar__{{item.position}}" class="nav navbar-nav navbar__{{item.position}}">
+                        <li class="dropdown navbar__{{item.position}}__dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                {{item.title}}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                {% if item.MenuItem.0 %} 
+                                    {% for flota in item.MenuItem %} 
+                                        <li role="presentation"><a href="/country/{{flota.url}}?SessionID={{session}}">{{flota.title}}</a></li>
+                                    {% endfor %}
+                                {% else %}
+                                    {% if item.code != "imsweblinks" %}
+                                    <li role="presentation"><a href="#">{{item.MenuItem.title}}</a></li>
+                                    {% else %}
+                                    <li role="presentation"><a href="{{item.MenuItem.url}}">{{item.MenuItem.title}}</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                    {% else %}
+                    <ul id="navbar__{{item.position}}" class="nav navbar-nav navbar__{{item.position}}">
+                        <li role="presentation"><a href="/{{item.url}}{{fleetId}}?SessionID={{session}}">{{item.title}}</a></li>
+                    </ul>
+                    {% endif %}
+                {% endfor %}
             </div>
+            <!-- Fin Menu -->
         </div>
     </nav>
 

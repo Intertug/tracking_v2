@@ -276,3 +276,8 @@ p[data-color=red] {
 .circle--red::before {
   background-color: green;
 }
+
+.flag {
+    width: 10%;
+    height: 10%;
+}

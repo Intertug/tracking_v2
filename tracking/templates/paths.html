@@ -1,7 +1,7 @@
 {% extends 'layout/layout.html' %}
 {% load staticfiles %}
 
-{%block title%}Recorrido {{vessel.labels.lblVesselName}}{% endblock %}
+{%block title%}Recorrido {{vessel.vesselname}}{% endblock %}
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/paths.css' %}">
 {% endblock %}
@@ -20,8 +20,8 @@
             <span class="caret"></span>
         </a>
         <ul class="dropdown-menu" role="menu">
-            <li role="presentation"><a href="/reports/fuel/{{vessel.fleetId}}/{{vessel.vesselId}}">Consumo de Combustible</a></li>
-            <li role="presentation"><a href="/reports/distance/{{vessel.fleetId}}/{{vessel.vesselId}}">Distancia Recorrida</a></li>
+            <li role="presentation"><a href="/reports/fuel/{{vessel.FleetId}}/{{vessel.id}}">Consumo de Combustible</a></li>
+            <li role="presentation"><a href="/reports/distance/{{vessel.FleetId}}/{{vessel.id}}">Distancia Recorrida</a></li>
         </ul>
     </li>
 </ul>
@@ -29,14 +29,14 @@
 
 {% block sidebarPaths %}
 <header id="rm-html" class="sidebar__card">
-    <a href="/country/{{vessel.fleetId}}">Atrás Flota</a>
-    <h3 class="sidebar__card__title">{{vessel.labels.lblVesselName}}</h3>
+    <a href="/country/{{vessel.FleetId}}">Atrás Flota</a>
+    <h3 class="sidebar__card__title">{{vessel.vesselname}} <img src="{% static 'flags/' %}{{vessel.FlagCode}}.png" /></h3>
     <p class="sidebar__card__description">
-        <b>{{vessel.labels.lblCallsign}}</b>: {{vessel.callsign}}
-        <b>{{vessel.labels.lblIMO}}</b>: {{vessel.IMO}}
+        <b>CallSign</b>: {{vessel.Callsign}}
+        <b>IMO</b>: {{vessel.IMO}}
     </p>
     <!-- <p class="sidebar__card__description last-report "> Último reporte: * </p> -->
-    <img class="sidebar__card__image" src="{% static '' %}img/{{vessel.image}}">
+    <img class="sidebar__card__image" src="{% static '' %}img/{{vessel.Picture}}">
 </header>
 <div class="panel panel-default alerts__panel">
     <table id="alerts-html" class="table alerts__table">
@@ -137,55 +137,54 @@
     })
     var dots = [
         {% for p in path.coordinates %}
-            ["{{vessel.labels.lblVesselName|upper}}", {{p.position.lat}}, {{p.position.lon}}, 1,
-            "<h6>{{vessel.labels.lblVesselName|upper}}</h6> <b>Velocidad</b>: {{p.speed}} Nudos<br/> <b>Fecha</b>: {{p.datetime}} <br/><br/>",
+            ["{{vessel.vesselname|upper}}", {{p.position.lat}}, {{p.position.lon}}, 1,
+            "<h6>{{vessel.vesselname|upper}}</h6> <b>Velocidad</b>: {{p.speed}} Nudos<br/> <b>Fecha</b>: {{p.datetime}} <br/><br/>",
             "{{p.id}}", "{{p.speed}}", "{{p.datetime}}"],
         {% endfor %}
     ]
-    {% if map.docks %}
-    var platforms = [
-        {% for p in map.platforms %}
-        {
-            icon: "{% static '' %}img/{{p.icon}}",
-            center: new google.maps.LatLng({{p.center.0}}, {{p.center.1}}),
-            name: "{{p.name}}"
-        },
+    {% if map.mapMarkers %}
+        var icons = [
+        {% for type in map.mapMarkers %}
+            {% if type.type == "icon" %}
+            {
+                icon: "{% static '' %}img/{{type.image}}",
+                center: new google.maps.LatLng({{type.center.0}}, {{type.center.1}}),
+                name: "{{type.name}}",
+                html: "{{type.markerdata}}"
+            },
+            {% endif %}
         {% endfor %}
-    ]
+        ]
 
-    var docks = [
-        {% for d in map.docks %}
-        {
-            icon: "{% static '' %}img/{{d.icon}}",
-            center: new google.maps.LatLng({{d.center.0}}, {{d.center.1}}),
-            name: "{{d.name}}"
-        },
+        var polygons = [
+        {% for type in map.mapMarkers %}
+            {% if type.type == "polygon" %}
+            {
+                path:[
+                {% for vertice in type.vertices %}
+                   new google.maps.LatLng({{vertice.0}}, {{vertice.1}}),
+                {% endfor %}
+                ],
+                html: "{{type.name}}"
+            },
+            {% endif %}
         {% endfor %}
-    ]
+        ]
 
-    var points = [
-        {% for circles in map.anchorages %}
-        {
-            center: new google.maps.LatLng({{circles.center.0}}, {{circles.center.1}}),
-            radius: {{circles.radius}},
-            html: "{{circles.name}}"
-        },
+        var circles = [
+        {% for type in map.mapMarkers %}
+            {% if type.type == "circle" %}
+            {
+                center: new google.maps.LatLng({{type.center.0}}, {{type.center.1}}),
+                name: "{{type.name}}",
+                radius: {{type.radius}},
+                html: "{{type.marketdata}}"
+            },
+            {% endif %}
         {% endfor %}
-    ]
-
-    var moorings = [
-        {% for moor in map.moorings %}
-        {
-            path: [
-            {% for area in moor.vertices %}
-                   new google.maps.LatLng({{area.0}}, {{area.1}}),
-            {% endfor %}
-            ],
-            html: "{{moor.name}}"
-        },
-        {% endfor %}
-    ]
+        ]
     {% endif %}
+
     var track = [
         {% for p in path.coordinates %}
             new google.maps.LatLng({{p.position.lat}}, {{p.position.lon}}),
@@ -251,25 +250,18 @@
             {% endwith %}
             map: map,
             draggable: false,
-            icon: "{% static '' %}img/"+"{{vessel.icon}}",
-            title: "{{vessel.labels.lblVesselname}}",
+            icon: "{% static '' %}img/"+"{{vessel.Icon}}",
+            title: "{{vessel.vesselname}}",
             zIndex: 5
         })
 
         setMarkers(map, dots)
-        {% if map.docks %}
-        setPlatforms(map, platforms)
-        setDocks(map, docks)
+        {% if map.mapMarkers %}
+        setIcons(map, icons)
         {% endif %}
-        {% if map.cluster > 0 %}
-        var mcOptions = {
-            gridSize: {{map.cluster}},
-            maxZoom: 12
-        }
-        var mc = new MarkerClusterer(map, markers, mcOptions)
-        {% endif %}
-        {% if map.docks %}
-        for (var p in points) {
+
+        {% if map.mapMarkers %}
+        for (var p in circles) {
             var circleOptions = {
               strokeColor: '#FF0000',
               strokeOpacity: 0.7,
@@ -277,9 +269,9 @@
               fillColor: '#FF0000',
               fillOpacity: 0.40,
               map: map,
-              center: points[p].center,
-              radius: points[p].radius,
-              html: points[p].html,
+              center: circles[p].center,
+              radius: circles[p].radius,
+              html: circles[p].name + "<br>" + circles[p].html,
               zIndex: 1
             }
             var circle =  new google.maps.Circle(circleOptions)
@@ -296,15 +288,15 @@
                 infoWindowTemp.open(map)
             })
         }
-        for (var i = 0; i < moorings.length; i++){
+        for (var i = 0; i < polygons.length; i++){
             mooringOpt = new google.maps.Polygon({
-                paths: moorings[i]["path"],
+                paths: polygons[i]["path"],
                 strokeColor: '#FF0000',
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
                 fillColor: '#FF0000',
                 fillOpacity: 0.35,
-                html: moorings[i]["html"],
+                html: polygons[i]["html"],
                 zIndex: 1
             })
             var infoWindowTemp = new google.maps.InfoWindow({
@@ -353,7 +345,7 @@
             google.maps.event.addListener(marker, "click", function () {
                 id = this.dateId
                 $.get( "http://190.242.119.122:82/sioservices/daqonboardservice.asmx/GetDaqValue",
-                { SessionID: "", GetData: "vesselid={{vessel.vesselId}}|datestring=" + id  } )
+                { SessionID: "", GetData: "vesselid={{vessel.id}}|datestring=" + id  } )
                   .done(function(data){
                     var values = data.childNodes[0].childNodes[0].nodeValue
                     values = JSON.parse(values)
@@ -385,38 +377,18 @@
             })
        }
     }
-    {% if map.docks %}
-    function setPlatforms(map, platforms){
-       for (var p in platforms){
-            var marker = new google.maps.Marker({
-                position: platforms[p].center,
-                map: map,
-                icon: platforms[p].icon,
-                draggable: false,
-                title: platforms[p].name,
-                zIndex: 2,
-                html: "<h6>" + platforms[p].name + "</h6>"
-            })
-            google.maps.event.addListener(marker, "mouseover", function () {
-                infoWindow.setContent(this.html)
-                infoWindow.open(map, this)
-            })
-            google.maps.event.addListener(marker, "mouseout", function () {
-                infoWindow.close()
-            })
-       }
-    }
 
-    function setDocks(map, docks){
-       for (var d in docks){
+    {% if map.mapMarkers %}
+    function setIcons(map, icons){
+       for (var p in icons){
             var marker = new google.maps.Marker({
-                position: docks[d].center,
+                position: icons[p].center,
                 map: map,
-                icon: docks[d].icon,
+                icon: icons[p].icon,
                 draggable: false,
-                title: docks[d].name,
+                title: icons[p].name,
                 zIndex: 2,
-                html: "<h6>" + docks[d].name + "</h6>"
+                html: "<h6>" + icons[p].name + "</h6> <br>" + icons[p].html
             })
             google.maps.event.addListener(marker, "mouseover", function () {
                 infoWindow.setContent(this.html)

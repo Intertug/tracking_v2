@@ -29,7 +29,7 @@
     <form class="form sidebar__form" method="POST">
         {% csrf_token %}
         {% for vessel in vessels %}
-        <div class="form__group">
+        <div class="form__group col-md-6">
             <input type="checkbox" id="{{vessel.vesselname|slugify}}" name="vessels" value="{{vessel.id}}">
             <label for="vessels">{{vessel.vesselname}}</label>
         </div>

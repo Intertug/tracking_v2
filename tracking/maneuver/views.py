@@ -27,7 +27,9 @@ def maneuver(request, fleet):
         vesselConfig = []
         #with the vesselsId's creates all the configurations for that ids
         for vessel in vesselsIds:
-            vesselConfig.append(getJSON(vessel, vsConf))
+            getData = "vesselid=" + vessel
+            configJson = getXML(sessionId, getData, vsConf)
+            vesselConfig.append(configJson["configdata"])
 
         vessels = request.POST.getlist("vessels")
         dateOne = request.POST.get("dateone")
@@ -42,7 +44,9 @@ def maneuver(request, fleet):
             hourTwo = "0" + hourTwo
 
         vesselsData = []
-        mapConfig = getJSON(str(fleet), mapConf)
+        getData = "fleetId=" + fleet
+        mapConfig = getXML(sessionId, getData, mapConf)
+        mapConfig = mapConfig["configdata"]
         visualConfig = getJSON("0", visualConf)
 
         for vessel in vessels:
@@ -51,11 +55,13 @@ def maneuver(request, fleet):
             #If in the request comes a POST with a init and final tags, take the content and depending
             #on the content or not, bring a diferent range of dataset
             getData += "|INIDATE=" + str(dateOne) + " " + str(hourOne) + ":00:00"
-            getData += "|ENDDATE=" + str(dateTwo) + " " + str(hourTwo) + ":59:59"           
+            getData += "|ENDDATE=" + str(dateTwo) + " " + str(hourTwo) + ":00:00"           
             gpsData = getXML(sessionId, getData, vsGpsData)
             daqValue = getXML(sessionId, getData, daqVal)
-            vesselConfig = getJSON(vessel, vsConf)
-            data = { "vesselName": vesselConfig["vesselName"],
+            getData = "vesselid=" + vessel
+            vesselConfig = getXML(sessionId, getData, vsConf)
+            vesselConfig = vesselConfig["configdata"]
+            data = { "vesselName": vesselConfig["vesselname"],
                      "path": gpsData,
                      "values": daqValue,
                     }
@@ -85,8 +91,12 @@ def maneuver(request, fleet):
         vesselConfig = []
         #with the vesselsId's creates all the configurations for that ids
         for vessel in vesselsIds:
-            vesselConfig.append(getJSON(vessel, vsConf))
-        mapConfig = getJSON(fleet, mapConf)
+            getData = "vesselid=" + vessel
+            configJson = getXML(sessionId, getData, vsConf)
+            vesselConfig.append(configJson["configdata"])
+        getData = "fleetId=" + fleet
+        mapConfig = getXML(sessionId, getData, mapConf)
+        mapConfig = mapConfig["configdata"]
         vars = {"vessels": vesselsPosition, "visual": visualConfig, "map": mapConfig, "vessel": vesselConfig, 
                 "fleet": fleetName, "fleetId": fleet}
     
