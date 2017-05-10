@@ -6,14 +6,25 @@ from tracking.settings import (DAQ_VALUE_URL as daqVal,
                                VISUAL_CONFIGURATION_URL as visualConf,
                                MAP_CONFIGURATION_URL as mapConf, 
                                VESSEL_GPS_DATA_URL as vsGpsData,
-                               ALARMS_LOG_URL as alLog)
+                               ALARMS_LOG_URL as alLog,
+                               APPLICATION_ID as appId,
+                               LOGGING_URL as LOGIN)
 
 def paths(request, vessel):
     '''
     Controller that recieve a request from the browser and a parameter in the url with the vesselId
     returns a render page with the variables to use in the HTML
     '''
-    sessionId = ""
+    if request.GET.get('SessionID'):
+        sessionId = request.GET.get('SessionID')
+    else:
+        return redirect(LOGIN)
+    getData = "Appid=" + appId
+    userUI = getXML(sessionId, getData, visualConf)
+    if userUI["query"]["ans"] == "OK_QRY":
+        ui = userUI["query"]["rst"]
+    else:
+        return redirect(LOGIN)
     getData = "vesselid=" + vessel
     #If in the request comes a POST with a init and final tags, take the content and depending
     #on the content or not, bring a diferent range of dataset
@@ -62,7 +73,7 @@ def paths(request, vessel):
         dates["value"] = "{} {}".format(date1, date2[:8])
     getData += "|datestring=" + str(dateId)
     daqValue = getXML(sessionId, getData, daqVal)
-    visualConfig = getJSON("0", visualConf)
+    visualConfig = ui
     getData = "vesselid=" + vessel
     vesselConfig = getXML(sessionId, getData, vsConf)
     vesselConfig = vesselConfig["configdata"]
@@ -73,5 +84,5 @@ def paths(request, vessel):
     mapConfig = mapConfig["configdata"]
     alarms_log = getJSON(vessel, alLog)
     vars = {"path": gpsData, "visual": visualConfig, "map": mapConfig, "vessel": vesselConfig, 
-            "alarms": alarms_log, "dates": dates, "value": daqValue, "fleetId": fleetID}
+            "alarms": alarms_log, "dates": dates, "value": daqValue, "fleetId": fleetID, "session": sessionId}
     return render(request, "paths.html", vars)

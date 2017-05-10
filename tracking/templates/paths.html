@@ -20,8 +20,8 @@
             <span class="caret"></span>
         </a>
         <ul class="dropdown-menu" role="menu">
-            <li role="presentation"><a href="/reports/fuel/{{vessel.FleetId}}/{{vessel.id}}">Consumo de Combustible</a></li>
-            <li role="presentation"><a href="/reports/distance/{{vessel.FleetId}}/{{vessel.id}}">Distancia Recorrida</a></li>
+            <li role="presentation"><a href="/reports/fuel/{{vessel.FleetId}}/{{vessel.id}}?SessionID={{session}}">Consumo de Combustible</a></li>
+            <li role="presentation"><a href="/reports/distance/{{vessel.FleetId}}/{{vessel.id}}?SessionID={{session}}">Distancia Recorrida</a></li>
         </ul>
     </li>
 </ul>
@@ -29,7 +29,7 @@
 
 {% block sidebarPaths %}
 <header id="rm-html" class="sidebar__card">
-    <a href="/country/{{vessel.FleetId}}">Atrás Flota</a>
+    <a href="/country/{{vessel.FleetId}}?SessionID={{session}}">Atrás Flota</a>
     <h3 class="sidebar__card__title">{{vessel.vesselname}} <img src="{% static 'flags/' %}{{vessel.FlagCode}}.png" /></h3>
     <p class="sidebar__card__description">
         <b>CallSign</b>: {{vessel.Callsign}}

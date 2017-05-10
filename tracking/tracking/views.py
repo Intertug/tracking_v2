@@ -3,11 +3,10 @@ from settings import (VESSEL_CINFIGURATION_URL as vsConf,
                       VESSELS_POSITION_URL as vsPos, 
                       VISUAL_CONFIGURATION_URL as visualConf,
                       MAP_CONFIGURATION_URL as mapConf, 
-                      APPLICATION_ID as appId)
+                      APPLICATION_ID as appId,
+                      LOGGING_URL as LOGIN)
 from webServicesCalls import getXML, getJSON
 from django.shortcuts import redirect
-
-LOGIN = 'http://iris.intertug.com:85/Account/Login.aspx'
 
 def country(request, fleet):
     '''

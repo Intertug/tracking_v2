@@ -54,8 +54,8 @@
 
 {% block sidebarFuelReport %}
 <section class="sidebar">
-    <a href="/country/{{fleetId}}">Atrás Flota</a>
-    <a href="/paths/{{vessel}}">Atrás Recorrido</a>
+    <a href="/country/{{fleetId}}?SessionID={{session}}">Atrás Flota</a>
+    <a href="/paths/{{vessel}}?SessionID={{session}}">Atrás Recorrido</a>
     <div class="sidebar__card">
         {% for name in names %}
             {% if name.id == vessel %}

@@ -4,7 +4,9 @@ from tracking.webServicesCalls import getXML, getJSON
 from tracking.settings import (VESSELS_POSITION_URL as vsPos,
                                VISUAL_CONFIGURATION_URL as visualConf, 
                                VESSEL_GPS_DATA_URL as vsGpsData,
-                               CONN_STRING as dbString)
+                               CONN_STRING as dbString,
+                               APPLICATION_ID as appId,
+                               LOGGING_URL as LOGIN)
 import datetime
 import sys
 import math
@@ -14,7 +16,16 @@ def distance(request, vessel, fleet):
     Controler that recieve a request from the browser and two parameters in the url with the fleetId and vesselId
     returns a render page with the variables to use in the HTML
     '''
-    sessionId = ""
+    if request.GET.get('SessionID'):
+        sessionId = request.GET.get('SessionID')
+    else:
+        return redirect(LOGIN)
+    getData = "Appid=" + appId
+    userUI = getXML(sessionId, getData, visualConf)
+    if userUI["query"]["ans"] == "OK_QRY":
+        ui = userUI["query"]["rst"]
+    else:
+        return redirect(LOGIN)
     getData = "vesselid=" + vessel
     data = []
     #sees if in the request comes a POST to create a biger report and the range of the report
@@ -56,8 +67,9 @@ def distance(request, vessel, fleet):
             "id": v["id"]
         }
         vesselsNames.append(var)
-    visualConfig = getJSON("0", visualConf)
-    vars = {"fleetId": fleet, "data": data, "names": vesselsNames, "visual": visualConfig, "vessel": vessel, "dates": dates}
+    visualConfig = ui
+    vars = {"fleetId": fleet, "data": data, "names": vesselsNames, "visual": visualConfig, "vessel": vessel, "dates": dates, 
+            "session": sessionId}
     return render(request, "distanceReport.html", vars)
 
 def createDistance(coordinates, date):
@@ -100,7 +112,16 @@ def consumption(request, vessel, fleet):
     Controller that receives a request from the browser and two parameters in the url with the fleetId and vesselId
     returns a render page with the variables to use in the HTML
     '''
-    sessionId = ""
+    if request.GET.get('SessionID'):
+        sessionId = request.GET.get('SessionID')
+    else:
+        return redirect(LOGIN)
+    getData = "Appid=" + appId
+    userUI = getXML(sessionId, getData, visualConf)
+    if userUI["query"]["ans"] == "OK_QRY":
+        ui = userUI["query"]["rst"]
+    else:
+        return redirect(LOGIN)
     getData = "fleetId=" + fleet
     vesselsPosition = getXML(sessionId, getData, vsPos)
     #sees if in the request comes a POST to create a biger report and the range of the report
@@ -122,7 +143,7 @@ def consumption(request, vessel, fleet):
             "init": datetime.datetime.today().isoformat().split("T")[0],
             "final": datetime.datetime.today().isoformat().split("T")[0]
         }
-    visualConfig = getJSON("0", visualConf)
+    visualConfig = ui
     vesselsNames = []
     #gets all the names and vesselsIds
     for v in vesselsPosition:
@@ -138,7 +159,7 @@ def consumption(request, vessel, fleet):
             bow = True
             break 
     vars = {"names": vesselsNames, "visual": visualConfig, "consumption": consumption, "vessel": vessel, 
-            "fleetId": fleet, "bow": bow, "dates": dates}
+            "fleetId": fleet, "bow": bow, "dates": dates, "session": sessionId}
     return render(request, "fuelReport.html", vars)
 
 def fuelUsage(vi, dateOne, dateTwo):

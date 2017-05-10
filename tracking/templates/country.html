@@ -73,7 +73,7 @@
         </div>
         <div style="text-align: center" class="panel-footer">
             <div class="btn-group-sm" role="group" aria-label="...">
-                <a href="/paths/{{vs.id}}" type="button" class="btn btn-primary">Recorrido</a>
+                <a href="/paths/{{vs.id}}?SessionID={{session}}" type="button" class="btn btn-primary">Recorrido</a>
                 <!-- <button id="recorrido" vesselidselected="0" class="btn btn-primary">Recorrido</button>-->
                 <div class="btn-group btn-group-sm" role="group">
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -82,10 +82,10 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li>
-                            <a href="/reports/fuel/{{fleetId}}/{{vs.id}}">Consumo Combustible</a>
+                            <a href="/reports/fuel/{{fleetId}}/{{vs.id}}?SessionID={{session}}">Consumo Combustible</a>
                         </li>
                         <li>
-                            <a href="/reports/distance/{{fleetId}}/{{vs.id}}">Distancias Recorridas</a>
+                            <a href="/reports/distance/{{fleetId}}/{{vs.id}}?SessionID={{session}}">Distancias Recorridas</a>
                         </li>
                     </ul>
                 </div>
