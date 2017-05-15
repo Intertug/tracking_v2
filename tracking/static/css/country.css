@@ -197,3 +197,13 @@ p[data-color=red] {
   width: 340px;
   margin: 5px 5px 0 5px;
 }
+
+.maneuver_names {
+  margin: 0;
+  padding: 0;
+}
+
+.maneuver_names label{
+  margin: 0;
+  padding: 0;
+}

@@ -7,7 +7,10 @@ from tracking.settings import (DAQ_VALUE_URL as daqVal,
                                VISUAL_CONFIGURATION_URL as visualConf,
                                MAP_CONFIGURATION_URL as mapConf, 
                                VESSEL_GPS_DATA_URL as vsGpsData,
-                               ALARMS_LOG_URL as alLog)
+                               ALARMS_LOG_URL as alLog,
+                               APPLICATION_ID as appId,
+                               LOGGING_URL as LOGIN)
+from tracking.util import selectFleetName
 
 def maneuver(request, fleet):
 
@@ -16,7 +19,16 @@ def maneuver(request, fleet):
         Controller that recieve a request from the browser
         returns a render page with the variables to use in the HTML
         '''
-        sessionId = ""
+        if request.GET.get('SessionID'):
+            sessionId = request.GET.get('SessionID')
+        else:
+            return redirect(LOGIN)
+        getData = "Appid=" + appId
+        userUI = getXML(sessionId, getData, visualConf)
+        if userUI["query"]["ans"] == "OK_QRY":
+            ui = userUI["query"]["rst"]
+        else:
+            return redirect(LOGIN)
         getData = "fleetId=" + fleet
         vesselsPosition = getXML(sessionId, getData, vsPos)
         
@@ -47,10 +59,9 @@ def maneuver(request, fleet):
         getData = "fleetId=" + fleet
         mapConfig = getXML(sessionId, getData, mapConf)
         mapConfig = mapConfig["configdata"]
-        visualConfig = getJSON("0", visualConf)
+        visualConfig = ui
 
         for vessel in vessels:
-            sessionId = ""
             getData = "vesselid=" + vessel
             #If in the request comes a POST with a init and final tags, take the content and depending
             #on the content or not, bring a diferent range of dataset
@@ -67,7 +78,7 @@ def maneuver(request, fleet):
                     }
             vesselsData.append(data)
         vars = {"vessels": vesselsPosition, "data": vesselsData, "visual": visualConfig, "map": mapConfig, "fleetId": fleet,
-                "vessel": vesselConfig}
+                "vessel": vesselConfig, "session": sessionId}
 
 #########################
     else:
@@ -75,15 +86,20 @@ def maneuver(request, fleet):
         Controller that recieve a request from the browser
         returns a render page with the variables to use in the HTML
         '''
-        sessionId = ""
+        if request.GET.get('SessionID'):
+            sessionId = request.GET.get('SessionID')
+        else:
+            return redirect(LOGIN)
+        getData = "Appid=" + appId
+        userUI = getXML(sessionId, getData, visualConf)
+        if userUI["query"]["ans"] == "OK_QRY":
+            ui = userUI["query"]["rst"]
+        else:
+            return redirect(LOGIN)
         getData = "fleetId=" + fleet
         vesselsPosition = getXML(sessionId, getData, vsPos)
-        visualConfig = getJSON("0", visualConf)
-        fleetName = " Maniobras Flota Global"
-        #extracts all the fleet Names
-        for f in visualConfig["linksmenu"][0]["links"]:
-            if fleet == str(f["value"]):
-                fleetName = "Maniobras " + f["label"]
+        visualConfig = ui
+        fleetName = selectFleetName(visualConfig["Menu"]["MenuItem"], fleet)
         vesselsIds = []
         #extracts all the vesselsId's
         for vessel in vesselsPosition:
@@ -98,6 +114,6 @@ def maneuver(request, fleet):
         mapConfig = getXML(sessionId, getData, mapConf)
         mapConfig = mapConfig["configdata"]
         vars = {"vessels": vesselsPosition, "visual": visualConfig, "map": mapConfig, "vessel": vesselConfig, 
-                "fleet": fleetName, "fleetId": fleet}
+                "fleet": fleetName, "fleetId": fleet, "session": sessionId}
     
     return render(request, "maneuver.html", vars)

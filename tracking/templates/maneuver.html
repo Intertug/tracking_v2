@@ -19,37 +19,32 @@
 </div>
 {% endblock %}
 
-{% block conection %}
-<li role="presentation"><a href="/alerts/{{fleetId}}">Estados de Conexión</a></li>
-{% endblock %}
-
 {% block sidebarManeuver %}
 <section class="sidebar">
-    <a href="/country/{{fleetId}}">Atrás Flota</a>
+    <a href="/country/{{fleetId}}?SessionID={{session}}">Atrás Flota</a>
     <form class="form sidebar__form" method="POST">
         {% csrf_token %}
         {% for vessel in vessels %}
-        <div class="form__group col-md-6">
+        <div class="maneuver_names col-md-6">
             <input type="checkbox" id="{{vessel.vesselname|slugify}}" name="vessels" value="{{vessel.id}}">
             <label for="vessels">{{vessel.vesselname}}</label>
         </div>
         {% endfor %}
-        <br />
         <div class="form__group">
-            <label for="dateone" class="control-label form__label">Fecha inicio: </label>
             <input required type="text" id="dateone" name="dateone" class="form-control form__date form__input" placeholder="{{dates.init}}" value="{{dates.init}}" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+            <label for="dateone" class="control-label form__label">Fecha inicio </label>
         </div>
         <div class="form__group">
-            <label for="hourone" class="control-label form__label">Hora inicio: </label>
             <input required type="number" id="hourone" name="hourone" class="form-control form__date form__input" placeholder="00" value="00" max="23" min="00">
+            <label for="hourone" class="control-label form__label">Hora inicio </label>
         </div>
         <div class="form__group">
-            <label for="datetwo" class="control-label form__label">Fecha final: </label>
             <input required type="text" id="datetwo" name="datetwo" class="form-control form__date form__input" placeholder="{{dates.final}}" value="{{dates.final}}" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+            <label for="datetwo" class="control-label form__label">Fecha final </label>
         </div>
         <div class="form__group">
-            <label for="hourtwo" class="control-label form__label">Hora final: </label>
             <input required type="number" id="hourtwo" name="hourtwo" class="form-control form__date form__input" placeholder="23" value="23" max="23" min="00">
+            <label for="hourtwo" class="control-label form__label">Hora final </label>
         </div>
         <input type="submit" class="btn form-control btn-success form__submit" value="Generar">
     </form>

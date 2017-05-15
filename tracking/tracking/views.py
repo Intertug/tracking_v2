@@ -7,6 +7,7 @@ from settings import (VESSEL_CINFIGURATION_URL as vsConf,
                       LOGGING_URL as LOGIN)
 from webServicesCalls import getXML, getJSON
 from django.shortcuts import redirect
+from util import selectFleetName
 
 def country(request, fleet):
     '''
@@ -26,17 +27,8 @@ def country(request, fleet):
     getData = "fleetId=" + fleet
     vesselsPosition = getXML(sessionId, getData, vsPos)
     visualConfig = ui
-    fleetName = "Flota Global"
     #extracts all the fleet Names
-    if type(visualConfig["Menu"]["MenuItem"]) == type(dict()):
-        pass
-    else:
-        if type(visualConfig["Menu"]["MenuItem"][0]["MenuItem"]) == type(dict()):
-            fleetName = visualConfig["Menu"]["MenuItem"][0]["MenuItem"]["title"]
-        else:
-            for f in visualConfig["Menu"]["MenuItem"][0]["MenuItem"]:
-                if fleet == str(f["url"]):
-                    fleetName = f["title"]
+    fleetName = selectFleetName(visualConfig["Menu"]["MenuItem"], fleet)
     vesselsIds = []
     #extracts all the vesselsId's
     for vessel in vesselsPosition:
