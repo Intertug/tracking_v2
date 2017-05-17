@@ -10,7 +10,8 @@ from tracking.settings import (DAQ_VALUE_URL as daqVal,
                                ALARMS_LOG_URL as alLog,
                                APPLICATION_ID as appId,
                                LOGGING_URL as LOGIN)
-from tracking.util import selectFleetName
+from tracking.util import selectFleetName, validateSession
+from django.shortcuts import redirect
 
 def maneuver(request, fleet):
 
@@ -19,15 +20,9 @@ def maneuver(request, fleet):
         Controller that recieve a request from the browser
         returns a render page with the variables to use in the HTML
         '''
-        if request.GET.get('SessionID'):
-            sessionId = request.GET.get('SessionID')
-        else:
-            return redirect(LOGIN)
-        getData = "Appid=" + appId
-        userUI = getXML(sessionId, getData, visualConf)
-        if userUI["query"]["ans"] == "OK_QRY":
-            ui = userUI["query"]["rst"]
-        else:
+        try:
+            ui, sessionId = validateSession(request.GET.get('SessionID'), LOGIN, appId, visualConf)
+        except:
             return redirect(LOGIN)
         getData = "fleetId=" + fleet
         vesselsPosition = getXML(sessionId, getData, vsPos)
@@ -86,15 +81,9 @@ def maneuver(request, fleet):
         Controller that recieve a request from the browser
         returns a render page with the variables to use in the HTML
         '''
-        if request.GET.get('SessionID'):
-            sessionId = request.GET.get('SessionID')
-        else:
-            return redirect(LOGIN)
-        getData = "Appid=" + appId
-        userUI = getXML(sessionId, getData, visualConf)
-        if userUI["query"]["ans"] == "OK_QRY":
-            ui = userUI["query"]["rst"]
-        else:
+        try:
+            ui, sessionId = validateSession(request.GET.get('SessionID'), LOGIN, appId, visualConf)
+        except:
             return redirect(LOGIN)
         getData = "fleetId=" + fleet
         vesselsPosition = getXML(sessionId, getData, vsPos)

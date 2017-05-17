@@ -9,21 +9,17 @@ from tracking.settings import (DAQ_VALUE_URL as daqVal,
                                ALARMS_LOG_URL as alLog,
                                APPLICATION_ID as appId,
                                LOGGING_URL as LOGIN)
+from tracking.util import validateSession
+from django.shortcuts import redirect
 
 def paths(request, vessel):
     '''
     Controller that recieve a request from the browser and a parameter in the url with the vesselId
     returns a render page with the variables to use in the HTML
     '''
-    if request.GET.get('SessionID'):
-        sessionId = request.GET.get('SessionID')
-    else:
-        return redirect(LOGIN)
-    getData = "Appid=" + appId
-    userUI = getXML(sessionId, getData, visualConf)
-    if userUI["query"]["ans"] == "OK_QRY":
-        ui = userUI["query"]["rst"]
-    else:
+    try:
+        ui, sessionId = validateSession(request.GET.get('SessionID'), LOGIN, appId, visualConf)
+    except:
         return redirect(LOGIN)
     getData = "vesselid=" + vessel
     #If in the request comes a POST with a init and final tags, take the content and depending

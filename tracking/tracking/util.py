@@ -1,3 +1,6 @@
+from django.shortcuts import redirect
+from webServicesCalls import getXML
+
 def selectFleetName(item, fleet):
     fleetName = "Flota Global"
     if type(item) == type(dict()):
@@ -11,3 +14,12 @@ def selectFleetName(item, fleet):
                     fleetName = f["title"]
     
     return fleetName
+
+def validateSession(sessionId, LOGIN, appId, visualConf):
+    getData = "Appid=" + appId
+    userUI = getXML(sessionId, getData, visualConf)
+    if userUI["query"]["ans"] == "OK_QRY":
+        ui = userUI["query"]["rst"]
+    else:
+        return "No Query"
+    return ui, sessionId

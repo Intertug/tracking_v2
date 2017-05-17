@@ -26,5 +26,6 @@ urlpatterns = [
     url(r'^reports/', include('reports.urls')),
     url(r'^alerts/', include('alerts.urls')),
     url(r'^maneuver/', include('maneuver.urls')),
+    url(r'^login/', include('login.urls')),
     #url(r'^admin/', admin.site.urls),
 ]

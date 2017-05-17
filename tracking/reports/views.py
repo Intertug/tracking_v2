@@ -10,21 +10,17 @@ from tracking.settings import (VESSELS_POSITION_URL as vsPos,
 import datetime
 import sys
 import math
+from tracking.util import validateSession
+from django.shortcuts import redirect
 
 def distance(request, vessel, fleet):
     '''
     Controler that recieve a request from the browser and two parameters in the url with the fleetId and vesselId
     returns a render page with the variables to use in the HTML
     '''
-    if request.GET.get('SessionID'):
-        sessionId = request.GET.get('SessionID')
-    else:
-        return redirect(LOGIN)
-    getData = "Appid=" + appId
-    userUI = getXML(sessionId, getData, visualConf)
-    if userUI["query"]["ans"] == "OK_QRY":
-        ui = userUI["query"]["rst"]
-    else:
+    try:
+        ui, sessionId = validateSession(request.GET.get('SessionID'), LOGIN, appId, visualConf)
+    except:
         return redirect(LOGIN)
     getData = "vesselid=" + vessel
     data = []
@@ -112,15 +108,9 @@ def consumption(request, vessel, fleet):
     Controller that receives a request from the browser and two parameters in the url with the fleetId and vesselId
     returns a render page with the variables to use in the HTML
     '''
-    if request.GET.get('SessionID'):
-        sessionId = request.GET.get('SessionID')
-    else:
-        return redirect(LOGIN)
-    getData = "Appid=" + appId
-    userUI = getXML(sessionId, getData, visualConf)
-    if userUI["query"]["ans"] == "OK_QRY":
-        ui = userUI["query"]["rst"]
-    else:
+    try:
+        ui, sessionId = validateSession(request.GET.get('SessionID'), LOGIN, appId, visualConf)
+    except:
         return redirect(LOGIN)
     getData = "fleetId=" + fleet
     vesselsPosition = getXML(sessionId, getData, vsPos)

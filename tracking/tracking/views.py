@@ -7,22 +7,16 @@ from settings import (VESSEL_CINFIGURATION_URL as vsConf,
                       LOGGING_URL as LOGIN)
 from webServicesCalls import getXML, getJSON
 from django.shortcuts import redirect
-from util import selectFleetName
+from util import selectFleetName, validateSession
 
 def country(request, fleet):
     '''
     Controller that recieve a request from the browser and a parameter in the url with the fleetId
     returns a render page with the variables to use in the HTML
     '''
-    if request.GET.get('SessionID'):
-        sessionId = request.GET.get('SessionID')
-    else:
-        return redirect(LOGIN)
-    getData = "Appid=" + appId
-    userUI = getXML(sessionId, getData, visualConf)
-    if userUI["query"]["ans"] == "OK_QRY":
-        ui = userUI["query"]["rst"]
-    else:
+    try:
+        ui, sessionId = validateSession(request.GET.get('SessionID'), LOGIN, appId, visualConf)
+    except:
         return redirect(LOGIN)
     getData = "fleetId=" + fleet
     vesselsPosition = getXML(sessionId, getData, vsPos)
