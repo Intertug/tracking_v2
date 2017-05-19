@@ -45,3 +45,16 @@ def getJSON(id, urlString):
     dataJson = json.loads(data)
     return dataJson
 
+def getSession(url):
+    try:
+        openUrl = urllib.urlopen(url)
+    except:
+        print "Error calling XML service"
+    data = openUrl.read()
+    print data
+    openTag = data.find("SESSIONUID")
+    closeTag = data.find("/SESSIONUID")
+    sessionid = data[openTag+len("SESSIONUID")+4:closeTag-4]
+
+    return sessionid
+    

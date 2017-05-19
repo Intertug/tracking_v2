@@ -45,11 +45,13 @@ def index(request):
         sessionId = request.GET.get('SessionID')
         getData = "Appid=" + appId
         userUI = getXML(sessionId, getData, visualConf)
-        ui = userUI["query"]["rst"]
+        try:
+            ui = userUI["query"]["rst"]
+        except:
+            return redirect(LOGIN)
         if userUI["query"]["ans"] == "OK_QRY":
             return redirect(ui["homeUrl"]+"?SessionID="+sessionId)
         else:
             return redirect(LOGIN)
     else:
         return redirect(LOGIN)
-        #return render(request, "index.html")

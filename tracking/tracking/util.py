@@ -23,3 +23,4 @@ def validateSession(sessionId, LOGIN, appId, visualConf):
     else:
         return "No Query"
     return ui, sessionId
+    

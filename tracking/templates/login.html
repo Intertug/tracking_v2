@@ -1,0 +1,21 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+    <form class="form sidebar__form" method="POST">
+        {% csrf_token %}
+        <div class="form__group">
+            <label for="userName" class="control-label form__label">Usuario </label>
+            <input required type="text" id="userName" name="userName" class="form-control form__date form__input" placeholder="User">
+        </div>
+        <div class="form__group">
+            <label for="password" class="control-label form__label">Password </label>
+            <input required type="password" id="password" name="password" class="form-control form__date form__input" placeholder="Password">
+        </div>
+        <input type="submit" class="btn form-control btn-success form__submit" value="Login">
+    </form>
+</body>
+</html>
