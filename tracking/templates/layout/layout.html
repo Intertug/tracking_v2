@@ -45,7 +45,7 @@
                                     {% endfor %}
                                 {% else %}
                                     {% if item.code != "imsweblinks" %}
-                                    <li role="presentation"><a href="#">{{item.MenuItem.title}}</a></li>
+                                    <li role="presentation"><a href="/country/{{item.MenuItem.url}}?SessionID={{session}}">{{item.MenuItem.title}}</a></li>
                                     {% else %}
                                     <li role="presentation"><a href="{{item.MenuItem.url}}">{{item.MenuItem.title}}</a></li>
                                     {% endif %}

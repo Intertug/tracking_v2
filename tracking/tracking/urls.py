@@ -20,7 +20,7 @@ from . import views
 
 urlpatterns = [
     #url(r'^$', views.index),
-    url(r'^$', include('login.urls')),
+    url(r'^', include('login.urls')),
     #url(r'^$', RedirectView.as_view(url="country/0")),
     url(r'^country/(?P<fleet>[0-9]{1,4})/', views.country),
     url(r'^paths/', include('paths.urls')),

@@ -2,20 +2,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico'%}" />
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <title>Login IMS</title>
 </head>
 <body>
-    <form class="form sidebar__form" method="POST">
-        {% csrf_token %}
-        <div class="form__group">
-            <label for="userName" class="control-label form__label">Usuario </label>
-            <input required type="text" id="userName" name="userName" class="form-control form__date form__input" placeholder="User">
+    <div class = "container">
+        <div class="wrapper">
+            <form action="" method="POST" name="Login_Form" class="form-signin">  
+                {% csrf_token %}     
+                <h3 class="form-signin-heading">Login IMS</h3>
+                <hr class="colorgraph"><br>
+                
+                <input type="text" class="form-control" name="userName" placeholder="Usuario" required autofocus="" />
+                <input type="password" class="form-control" name="password" placeholder="Password" required/>     		  
+                <h4 class="bg-danger message">{{message}}</h4>
+                <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit">Login</button>  			
+            </form>
+			
         </div>
-        <div class="form__group">
-            <label for="password" class="control-label form__label">Password </label>
-            <input required type="password" id="password" name="password" class="form-control form__date form__input" placeholder="Password">
-        </div>
-        <input type="submit" class="btn form-control btn-success form__submit" value="Login">
-    </form>
+    </div>
 </body>
 </html>

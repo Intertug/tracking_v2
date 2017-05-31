@@ -49,12 +49,13 @@ def getSession(url):
     try:
         openUrl = urllib.urlopen(url)
     except:
-        print "Error calling XML service"
+        return "Error calling XML service"
     data = openUrl.read()
-    print data
-    openTag = data.find("SESSIONUID")
-    closeTag = data.find("/SESSIONUID")
-    sessionid = data[openTag+len("SESSIONUID")+4:closeTag-4]
-
+    if data.find("SESSIONUID") != -1:
+        openTag = data.find("SESSIONUID")
+        closeTag = data.find("/SESSIONUID")
+        sessionid = data[openTag+len("SESSIONUID")+4:closeTag-4]
+    else:
+        return "Invalid user/pass"
     return sessionid
     
