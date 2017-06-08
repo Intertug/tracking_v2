@@ -7,7 +7,8 @@ from settings import (VESSEL_CINFIGURATION_URL as vsConf,
                       LOGGING_URL as LOGIN)
 from webServicesCalls import getXML, getJSON
 from django.shortcuts import redirect
-from util import selectFleetName, validateSession
+from util import selectFleetName, validateSession, isForbidden
+from django.core.exceptions import PermissionDenied
 
 def country(request, fleet):
     '''
@@ -18,6 +19,9 @@ def country(request, fleet):
         ui, sessionId = validateSession(request.GET.get('SessionID'), LOGIN, appId, visualConf)
     except:
         return redirect(LOGIN)
+    forbidden = isForbidden(fleet, ui)
+    if forbidden == True:
+        raise PermissionDenied
     getData = "fleetId=" + fleet
     vesselsPosition = getXML(sessionId, getData, vsPos)
     visualConfig = ui

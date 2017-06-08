@@ -32,7 +32,7 @@
             <div class="collapse navbar-collapse navbar__collapsible" id="navbar-menu">
                 {% for item in visual.Menu.MenuItem %}
                     {% if item.MenuItem %} 
-                    <ul id="navbar__{{item.position}}" class="nav navbar-nav navbar__{{item.position}}">
+                    <ul class="nav navbar-nav navbar__{{item.position}}">
                         <li class="dropdown navbar__{{item.position}}__dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 {{item.title}}
@@ -54,12 +54,27 @@
                         </li>
                     </ul>
                     {% else %}
-                    <ul id="navbar__{{item.position}}" class="nav navbar-nav navbar__{{item.position}}">
-                        <li role="presentation"><a href="/{{item.url}}{{fleetId}}?SessionID={{session}}">{{item.title}}</a></li>
-                    </ul>
+                        {% if item.code == "imsweblogoff" %}
+                            <ul class="nav navbar-nav navbar__{{item.position}}">
+                                <li role="presentation"><a href="/{{item.url}}?SessionID={{session}}">{{item.title}}</a></li>
+                            </ul>
+                        {% else %}
+                        <ul class="nav navbar-nav navbar__{{item.position}}">
+                            <li role="presentation"><a href="/{{item.url}}{{fleetId}}?SessionID={{session}}">{{item.title}}</a></li>
+                        </ul>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
                 {% block reports %}{% endblock %}
+                <!--<div>
+                    {% for item in visual.Menu.MenuItem %}
+                        {% if item.code == "imsweblogoff" %}
+                            <ul id="navbar__{{item.position}}" class="nav navbar-nav navbar__{{item.position}}">
+                                <li role="presentation"><a href="/{{item.url}}?SessionID={{session}}">{{item.title}}</a></li>
+                            </ul>
+                        {% endif %}
+                    {% endfor %} 
+                </div>-->              
             </div>
             <!-- Fin Menu -->
         </div>

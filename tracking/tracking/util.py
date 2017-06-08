@@ -23,4 +23,17 @@ def validateSession(sessionId, LOGIN, appId, visualConf):
     else:
         return "No Query"
     return ui, sessionId
-    
+
+def isForbidden(fleet, ui):
+    fleets = []
+    if str(fleet) == "0":
+        fleets = ["0",]
+    try:
+        for m in ui["Menu"]["MenuItem"][0]["MenuItem"]:
+            fleets.append(str(m["url"]))
+        print fleets 
+    except:
+        fleets.append(ui["Menu"]["MenuItem"][0]["MenuItem"]["url"])
+    if str(fleet) not in fleets:
+        return True
+    return False

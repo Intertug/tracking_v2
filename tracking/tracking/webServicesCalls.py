@@ -58,4 +58,18 @@ def getSession(url):
     else:
         return "Invalid user/pass"
     return sessionid
+
+def closeSession(url):
+    try:
+        openUrl = urllib.urlopen(url)
+    except:
+        return "Error calling XML service"
+    data = openUrl.read()
+    if data.find("ANS") != -1:
+        openTag = data.find("ANS")
+        closeTag = data.find("/ANS")
+        state = data[openTag+len("ANS")+4:closeTag-4]
+    else:
+        return "Error Reading XML"
+    return state
     
