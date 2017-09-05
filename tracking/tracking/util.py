@@ -31,7 +31,7 @@ def isForbidden(fleet, ui):
     try:
         for m in ui["Menu"]["MenuItem"][0]["MenuItem"]:
             fleets.append(str(m["url"]))
-        print fleets 
+        #print fleets 
     except:
         fleets.append(ui["Menu"]["MenuItem"][0]["MenuItem"]["url"])
     if str(fleet) not in fleets:
