@@ -344,7 +344,8 @@
             })
             google.maps.event.addListener(marker, "click", function () {
                 id = this.dateId
-                $.get( "http://190.242.119.122:87/SioTestServices/daqonboardservice.asmx/GetDaqValue?",
+                console.log(id)
+                $.get( "http://190.242.119.122:87/SioTestServices/daqonboardservice.asmx/GetDaqValue",
                 { SessionID: "{{session}}", GetData: "vesselid={{vessel.id}}|datestring=" + id  } )
                   .done(function(data){
                     var values = data.childNodes[0].childNodes[0].nodeValue
